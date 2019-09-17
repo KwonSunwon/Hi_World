@@ -6,7 +6,7 @@
 void save(char const* fname)
 {
 	std::ifstream in(fname);
-	std::ofstream out("2019 C++ ¼ö¾÷·Ï.txt", std::ios::app);
+	std::ofstream out("2019 C++ ìˆ˜ì—…ë¡.txt", std::ios::app);
 
 	auto now = std::chrono::system_clock::now();
 	auto time = std::chrono::system_clock::to_time_t(now);
