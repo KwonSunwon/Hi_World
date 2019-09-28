@@ -1,0 +1,262 @@
+//-----------------------------------------------------------------------------
+// 2019. 9. 28 수 C++                           월56수34          (4주 2일)
+//
+// STACK - 지역변수, 함수의 인자전달, 리턴번지 저장, 예외
+// DATA	 - 전역변수, static 변수
+// CODE  - 함수가 기록되어 있다. 
+// HEAP  - Free Storage, 동적메모리 할당(Dynamic Memory Alloocation)
+//
+// FILE I/O
+//
+// 시험 1 - (5주 2일, 10월 2일 수요일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include "save.h"
+using namespace std;
+
+// STACK을 넘치게 해서 프로그램이 터지게
+
+void f( int );
+
+int i { };
+
+int main()
+{
+	while ( true )
+		f( 1 );
+
+	save( "소스.cpp" );
+}
+
+void f( int x )
+{
+	int a [ 100 ];
+	for( int& d : a )
+		d = 333;
+	cout << "f - " << ++i << ' ' << x << "a의 주소 " << (void*)a << endl;
+	f( 1 );
+}
+
+
+
+//-----------------------------------------------------------------------------
+// 2019. 9. 28 수 C++                           월56수34          (4주 2일)
+//
+// STACK - 지역변수, 함수의 인자전달, 리턴번지 저장, 예외
+// DATA	 - 전역변수, static 변수
+// CODE  - 함수가 기록되어 있다. 
+// HEAP  - Free Storage, 동적메모리 할당(Dynamic Memory Alloocation)
+//
+// FILE I/O
+//
+// 시험 1 - (5주 2일, 10월 2일 수요일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <thread>
+#include "save.h"
+using namespace std;
+
+// HEAP을 넘치게 하자 - 시스템이 더 이상 줄 수 있는 메모리가 없다고 함
+
+int main()
+{
+	int i {};
+
+	while( true )
+	{
+		int* p = new int[ 10'000'000 ];
+		for( int i = 0; i < 10'000'000; ++i )
+			p[ i ] = 123;
+
+		cout << ++i << "\r";
+		this_thread::sleep_for( 500ms );
+	}
+	save( "소스.cpp" );
+}
+
+
+//-----------------------------------------------------------------------------
+// 2019. 9. 28 수 C++                           월56수34          (4주 2일)
+//
+// STACK - 지역변수, 함수의 인자전달, 리턴번지 저장, 예외
+// DATA	 - 전역변수, static 변수
+// CODE  - 함수가 기록되어 있다. 
+// HEAP  - Free Storage, 동적메모리 할당(Dynamic Memory Alloocation)
+//
+// FILE I/O
+//
+// 시험 1 - (5주 2일, 10월 2일 수요일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <thread>
+#include "save.h"
+using namespace std;
+
+// HEAP을 넘치게 하자 - 시스템이 더 이상 줄 수 있는 메모리가 없다고 함
+
+int main()
+{
+	int i {};
+
+	while( true )
+	{
+		int* p = new int[ 10'000'000 ];
+		for( int i = 0; i < 10'000'000; ++i )
+			p[ i ] = 123;
+
+		cout << ++i << "\r";
+		this_thread::sleep_for( 500ms );
+	}
+	save( "소스.cpp" );
+}
+
+
+//-----------------------------------------------------------------------------
+// 2019. 9. 28 수 C++                           월56수34          (4주 2일)
+//
+// STACK - 지역변수, 함수의 인자전달, 리턴번지 저장, 예외
+// DATA	 - 전역변수, static 변수
+// CODE  - 함수가 기록되어 있다. 
+// HEAP  - Free Storage, 동적메모리 할당(Dynamic Memory Alloocation)
+//
+// FILE I/O
+//
+// 시험 1 - (5주 2일, 10월 2일 수요일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <thread>
+#include "save.h"
+using namespace std;
+
+// HEAP을 넘치게 하자 - 시스템이 더 이상 줄 수 있는 메모리가 없다고 함
+
+int main()
+{
+	int i {};
+
+	while( true )
+	{
+		int* p = new int[ 10'000'000 ];
+		for( int i = 0; i < 10'000'000; ++i )
+			p[ i ] = 123;
+
+		delete[] p; // 해제
+	}
+
+	//save( "소스.cpp" );
+}
+
+
+//-----------------------------------------------------------------------------
+// 2019. 9. 28 수 C++                           월56수34          (4주 2일)
+//
+//
+// FILE I/O
+//
+// 시험 1 - (5주 2일, 10월 2일 수요일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <random>
+#include "save.h"
+using namespace std;
+
+// [문제] 사용자에게서 몇 개의 정수를 사용할 건지 입력받자
+// 입력한 정수만큼 메모리를 확보하자.
+// 확보한 메모리를 랜덤값(1 ~ 1'000'000)으로 채우자
+// 제일 큰 값을 찾아 화면에 출력해 주자
+// 이 과정을 반복하자 - 영원히
+
+int main()
+{
+	default_random_engine dre;
+	uniform_int_distribution<> uid( 1, 1'000'000 );
+
+	int num;
+	int max;
+	while( true )
+	{
+		cout << "원하는 정수의 갯수 : ";
+		cin >> num;
+
+		int *p = new int[ sizeof( int )*num ];
+
+		for( int i = 0; i < num; ++i )
+			p[ i ] = uid( dre );
+
+		max = 0;
+
+		for( int i = 0; i < num; ++i )
+		{
+			if( max < p[ i ] )
+				max = p[ i ];
+		}
+		cout << "가장 큰 값 : " << max << endl;
+
+		delete[] p;
+	}
+
+	save( "소스.cpp" );
+}
+
+
+//-----------------------------------------------------------------------------
+// 2019. 9. 28 수 C++                           월56수34          (4주 2일)
+//
+//
+// FILE I/O
+//
+// 시험 1 - (5주 2일, 10월 2일 수요일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <random>
+#include "save.h"
+using namespace std;
+
+// [문제] 사용자에게서 몇 개의 정수를 사용할 건지 입력받자
+// 입력한 정수만큼 메모리를 확보하자.
+// 확보한 메모리를 랜덤값(1 ~ 1'000'000)으로 채우자
+// 제일 큰 값을 찾아 화면에 출력해 주자
+// 이 과정을 반복하자 - 영원히
+
+int main()
+{
+	default_random_engine dre;
+	uniform_int_distribution<> uid( 1, 1'000'000 );
+
+	int num;
+	int max;
+	while( true )
+	{
+		cout << "원하는 정수의 갯수 : ";
+		cin >> num;
+
+		int *p = new int[ sizeof( int )*num ];
+
+		for( int i = 0; i < num; ++i )
+		{
+			p[ i ] = uid( dre );
+			cout << p[ i ] <<  '\t';
+		}
+		
+		cout << endl;
+
+		max = 0;
+
+		for( int i = 0; i < num; ++i )
+		{
+			if( max < p[ i ] )
+				max = p[ i ];
+		}
+		cout << "가장 큰 값 : " << max << endl;
+
+		delete[] p;
+	}
+
+	save( "소스.cpp" );
+}
