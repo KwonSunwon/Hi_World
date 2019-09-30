@@ -1,20 +1,36 @@
+//-----------------------------------------------------------------------------
+// °­ÀÇ ³»¿ëÀ» ÀúÀåÇÏ±â À§ÇÑ save ÆÄÀÏ ¼±¾ğ
+// 2019. 9. 4. ¼ö¿äÀÏ                                          ÀÛ¼ºÀÚ:Sunwon
+//-----------------------------------------------------------------------------
+
 #include <fstream>
 #include <iostream>
 #include <chrono>
+#include <sstream>
+#include <ctime>
+#include <iomanip>
+#include <string>
 #pragma warning(disable:4996)
 
+//-----------------------------------------------------------------------------
 void save(char const* fname)
+//-----------------------------------------------------------------------------
 {
 	std::ifstream in(fname);
-	std::ofstream out("2019 C++ ìˆ˜ì—…ë¡.txt", std::ios::app);
 
+	// ÀúÀåÇÏ´Â ½ÃÁ¡ÀÇ ½Ã°£°ªÀ» ¾ò¾î¿ÀÀÚ
 	auto now = std::chrono::system_clock::now();
 	auto time = std::chrono::system_clock::to_time_t(now);
 	std::cout << ctime(&time) << std::endl;
 
+	std::stringstream ss;
+	ss << std::put_time( std::localtime( &time ), "%Y.%m.%d %a" );
+
+	std::ofstream out( ss.str() + ".txt", std::ios::app );
+
 	out << "\n\n\n";
 	out << "----------------------------------------------------------------------------" << std::endl;
-	out << ctime(&time);
+	out << ctime(&time);	// ÀúÀåµÈ ½Ã°£À» ±â·ÏÇÑ´Ù
 	out << "----------------------------------------------------------------------------" << std::endl;
 	out << "\n\n";
 
