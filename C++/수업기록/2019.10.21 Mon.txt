@@ -1,0 +1,1002 @@
+
+
+
+----------------------------------------------------------------------------
+Mon Oct 21 13:56:48 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 21 월 C++                           월56수34          (8주 1일)
+//
+//
+//
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include <algorithm>
+#include "save.h"
+
+using namespace std;
+
+// const와 &의 정확한 사용범의 매우 중요함
+
+int SN {};
+
+default_random_engine dre;
+uniform_int_distribution<int> uid { 1, 150 };
+
+class Dog {
+private:
+	int id { SN++ };		// 개 마다 고유의 식별번호를 준다
+	string name;
+	int age;
+
+public:
+	// 생성자 - 객체가 만들어질때 메모리를 어떻게 설정할 건가?
+	Dog() : name { "없음" }, age {}
+	{
+		name += to_string(uid( dre ));		// itoa
+		age = uid( dre );
+		//cout << id << " - 디폴트 생성자" << endl;
+	}
+
+	// 만일 객체가 복사된다면 이 함수가 불린다
+	Dog( const Dog& )
+	{
+		cout << "어 객체가 복사되는걸!" << endl;
+	}
+
+
+	// 소멸자 - 생성시 자원을 할당했다면 소멸자를 코딩해야 한다
+	~Dog()
+	{
+		//cout << id << " - 소멸자" << endl;
+	}
+	
+	// 멤버변수의 값을 읽게 하려면 gettor를 코딩
+	string getName() const		// const는 이 함수가 멤버변수를 읽기만 함을 보증
+	{
+		return name;
+	};
+
+	int getAge() const
+	{
+		return age;
+	};
+
+	// 멤버변수의 값을 쓰게 하려면 settor를 코딩
+
+
+	void run()
+	{
+		cout << id << " - " << name << " - " << age << " 달린다" << endl;
+	}
+
+	void show()
+	{
+		cout << id << " - " << name << ", " << age << "개월" << endl;
+	}
+};
+
+// [문제] 이 프로그램은 어떤 문제가 있는데 찾을 수 있을까?
+//                     /\
+//             메모리 사용 면에서
+
+int main()
+{
+	Dog dogs[ 100 ];
+
+	//sort( begin( dogs ), end( dogs ), [](Dog a, Dog b) {
+	//	return a.getAge() < b.getAge();
+	//});
+
+	for( Dog dog : dogs )		// 이 코드는 매우 잘못되었다
+		dog.show();
+
+	//cout << "이상 나이 순 정렬" << "\n" << endl;
+
+	//sort( begin( dogs ), end( dogs ), []( Dog a, Dog b ) {		//사전식 오름차순
+	//	return a.getName() < b.getName();
+	//} );
+
+	//for( Dog dog : dogs )		// 이 코드는 매우 잘못되었다
+	//	dog.show();
+
+	//cout << "이상 이름 순 정렬" << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 21 13:58:34 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 21 월 C++                           월56수34          (8주 1일)
+//
+//
+//
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include <algorithm>
+#include "save.h"
+
+using namespace std;
+
+// const와 &의 정확한 사용범의 매우 중요함
+
+int SN {};
+
+default_random_engine dre;
+uniform_int_distribution<int> uid { 1, 150 };
+
+class Dog {
+private:
+	int id { SN++ };		// 개 마다 고유의 식별번호를 준다
+	string name;
+	int age;
+
+public:
+	// 생성자 - 객체가 만들어질때 메모리를 어떻게 설정할 건가?
+	Dog() : name { "없음" }, age {}
+	{
+		name += to_string(uid( dre ));		// itoa
+		age = uid( dre );
+		//cout << id << " - 디폴트 생성자" << endl;
+	}
+
+	// 만일 객체가 복사된다면 이 함수가 불린다
+	Dog( const Dog& other ) : name{other.name}, age{other.age}
+	{
+		cout << "어 객체가 복사되는걸!" << endl;
+	}
+
+
+	// 소멸자 - 생성시 자원을 할당했다면 소멸자를 코딩해야 한다
+	~Dog()
+	{
+		//cout << id << " - 소멸자" << endl;
+	}
+	
+	// 멤버변수의 값을 읽게 하려면 gettor를 코딩
+	string getName() const		// const는 이 함수가 멤버변수를 읽기만 함을 보증
+	{
+		return name;
+	};
+
+	int getAge() const
+	{
+		return age;
+	};
+
+	// 멤버변수의 값을 쓰게 하려면 settor를 코딩
+
+
+	void run()
+	{
+		cout << id << " - " << name << " - " << age << " 달린다" << endl;
+	}
+
+	void show()
+	{
+		cout << id << " - " << name << ", " << age << "개월" << endl;
+	}
+};
+
+// [문제] 이 프로그램은 어떤 문제가 있는데 찾을 수 있을까?
+//                     /\
+//             메모리 사용 면에서
+
+int main()
+{
+	Dog dogs[ 100 ];
+
+	//sort( begin( dogs ), end( dogs ), [](Dog a, Dog b) {
+	//	return a.getAge() < b.getAge();
+	//});
+
+	for( Dog dog : dogs )		// 이 코드는 매우 잘못되었다 - 한 번 출력할때마다 복사 생성이 되어서 쓸데없이 뻘짓함
+		dog.show();
+
+	//cout << "이상 나이 순 정렬" << "\n" << endl;
+
+	//sort( begin( dogs ), end( dogs ), []( Dog a, Dog b ) {		//사전식 오름차순
+	//	return a.getName() < b.getName();
+	//} );
+
+	//for( Dog dog : dogs )		// 이 코드는 매우 잘못되었다
+	//	dog.show();
+
+	//cout << "이상 이름 순 정렬" << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 21 13:59:17 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 21 월 C++                           월56수34          (8주 1일)
+//
+//
+//
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include <algorithm>
+#include "save.h"
+
+using namespace std;
+
+// const와 &의 정확한 사용범의 매우 중요함
+
+int SN {};
+
+default_random_engine dre;
+uniform_int_distribution<int> uid { 1, 150 };
+
+class Dog {
+private:
+	int id { SN++ };		// 개 마다 고유의 식별번호를 준다
+	string name;
+	int age;
+
+public:
+	// 생성자 - 객체가 만들어질때 메모리를 어떻게 설정할 건가?
+	Dog() : name { "없음" }, age {}
+	{
+		name += to_string(uid( dre ));		// itoa
+		age = uid( dre );
+		//cout << id << " - 디폴트 생성자" << endl;
+	}
+
+	// 만일 객체가 복사된다면 이 함수가 불린다
+	Dog( const Dog& other ) : name{other.name}, age{other.age}
+	{
+		cout << "어 객체가 복사되는걸!" << endl;
+	}
+
+
+	// 소멸자 - 생성시 자원을 할당했다면 소멸자를 코딩해야 한다
+	~Dog()
+	{
+		//cout << id << " - 소멸자" << endl;
+	}
+	
+	// 멤버변수의 값을 읽게 하려면 gettor를 코딩
+	string getName() const		// const는 이 함수가 멤버변수를 읽기만 함을 보증
+	{
+		return name;
+	};
+
+	int getAge() const
+	{
+		return age;
+	};
+
+	// 멤버변수의 값을 쓰게 하려면 settor를 코딩
+
+
+	void run()
+	{
+		cout << id << " - " << name << " - " << age << " 달린다" << endl;
+	}
+
+	void show()
+	{
+		cout << id << " - " << name << ", " << age << "개월" << endl;
+	}
+};
+
+// [문제] 이 프로그램은 어떤 문제가 있는데 찾을 수 있을까?
+//                     /\
+//             메모리 사용 면에서
+
+int main()
+{
+	Dog dogs[ 100 ];
+
+	//sort( begin( dogs ), end( dogs ), [](Dog a, Dog b) {
+	//	return a.getAge() < b.getAge();
+	//});
+
+	for( Dog& dog : dogs )		// &를 이용해 주소만 가져옴
+		dog.show();
+
+	//cout << "이상 나이 순 정렬" << "\n" << endl;
+
+	//sort( begin( dogs ), end( dogs ), []( Dog a, Dog b ) {		//사전식 오름차순
+	//	return a.getName() < b.getName();
+	//} );
+
+	//for( Dog dog : dogs )		// 이 코드는 매우 잘못되었다
+	//	dog.show();
+
+	//cout << "이상 이름 순 정렬" << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 21 14:01:29 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 21 월 C++                           월56수34          (8주 1일)
+//
+//
+//
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include <algorithm>
+#include "save.h"
+
+using namespace std;
+
+// const와 &의 정확한 사용범의 매우 중요함
+
+int SN {};
+
+default_random_engine dre;
+uniform_int_distribution<int> uid { 1, 150 };
+
+class Dog {
+private:
+	int id { SN++ };		// 개 마다 고유의 식별번호를 준다
+	string name;
+	int age;
+
+public:
+	// 생성자 - 객체가 만들어질때 메모리를 어떻게 설정할 건가?
+	Dog() : name { "없음" }, age {}
+	{
+		name += to_string(uid( dre ));		// itoa
+		age = uid( dre );
+		//cout << id << " - 디폴트 생성자" << endl;
+	}
+
+	// 만일 객체가 복사된다면 이 함수가 불린다
+	Dog( const Dog& other ) : name{other.name}, age{other.age}
+	{
+		cout << "어 객체가 복사되는걸!" << endl;
+	}
+
+
+	// 소멸자 - 생성시 자원을 할당했다면 소멸자를 코딩해야 한다
+	~Dog()
+	{
+		//cout << id << " - 소멸자" << endl;
+	}
+	
+	// 멤버변수의 값을 읽게 하려면 gettor를 코딩
+	string getName() const		// const는 이 함수가 멤버변수를 읽기만 함을 보증
+	{
+		return name;
+	};
+
+	int getAge() const
+	{
+		return age;
+	};
+
+	// 멤버변수의 값을 쓰게 하려면 settor를 코딩
+
+
+	void run()
+	{
+		cout << id << " - " << name << " - " << age << " 달린다" << endl;
+	}
+
+	void show() const
+	{
+		cout << id << " - " << name << ", " << age << "개월" << endl;
+	}
+};
+
+// [문제] 이 프로그램은 어떤 문제가 있는데 찾을 수 있을까?
+//                     /\
+//             메모리 사용 면에서
+
+int main()
+{
+	Dog dogs[ 100 ];
+
+	//sort( begin( dogs ), end( dogs ), [](Dog a, Dog b) {
+	//	return a.getAge() < b.getAge();
+	//});
+
+	for( const Dog& dog : dogs )	// show 함수에도 const가 붙어야함
+		dog.show();
+
+	//cout << "이상 나이 순 정렬" << "\n" << endl;
+
+	//sort( begin( dogs ), end( dogs ), []( Dog a, Dog b ) {		//사전식 오름차순
+	//	return a.getName() < b.getName();
+	//} );
+
+	//for( Dog dog : dogs )		// 이 코드는 매우 잘못되었다
+	//	dog.show();
+
+	//cout << "이상 이름 순 정렬" << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 21 14:01:54 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 21 월 C++                           월56수34          (8주 1일)
+//
+//
+//
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include <algorithm>
+#include "save.h"
+
+using namespace std;
+
+// const와 &의 정확한 사용범의 매우 중요함
+
+int SN {};
+
+default_random_engine dre;
+uniform_int_distribution<int> uid { 1, 150 };
+
+class Dog {
+private:
+	int id { SN++ };		// 개 마다 고유의 식별번호를 준다
+	string name;
+	int age;
+
+public:
+	// 생성자 - 객체가 만들어질때 메모리를 어떻게 설정할 건가?
+	Dog() : name { "없음" }, age {}
+	{
+		name += to_string(uid( dre ));		// itoa
+		age = uid( dre );
+		//cout << id << " - 디폴트 생성자" << endl;
+	}
+
+	// 만일 객체가 복사된다면 이 함수가 불린다
+	Dog( const Dog& other ) : name{other.name}, age{other.age}
+	{
+		cout << "어 객체가 복사되는걸!" << endl;
+	}
+
+
+	// 소멸자 - 생성시 자원을 할당했다면 소멸자를 코딩해야 한다
+	~Dog()
+	{
+		//cout << id << " - 소멸자" << endl;
+	}
+	
+	// 멤버변수의 값을 읽게 하려면 gettor를 코딩
+	string getName() const		// const는 이 함수가 멤버변수를 읽기만 함을 보증
+	{
+		return name;
+	};
+
+	int getAge() const
+	{
+		return age;
+	};
+
+	// 멤버변수의 값을 쓰게 하려면 settor를 코딩
+
+
+	void run()
+	{
+		cout << id << " - " << name << " - " << age << " 달린다" << endl;
+	}
+
+	void show() const
+	{
+		cout << id << " - " << name << ", " << age << "개월" << endl;
+	}
+};
+
+// [문제] 이 프로그램은 어떤 문제가 있는데 찾을 수 있을까?
+//                     /\
+//             메모리 사용 면에서
+
+int main()
+{
+	Dog dogs[ 100 ];
+
+	sort( begin( dogs ), end( dogs ), [](Dog a, Dog b) {
+		return a.getAge() < b.getAge();
+	});
+
+	for( const Dog& dog : dogs )	// show 함수에도 const가 붙어야함
+		dog.show();
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 21 14:04:55 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 21 월 C++                           월56수34          (8주 1일)
+//
+//
+//
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include <algorithm>
+#include "save.h"
+
+using namespace std;
+
+// const와 &의 정확한 사용범의 매우 중요함
+
+int SN {};
+
+default_random_engine dre;
+uniform_int_distribution<int> uid { 1, 150 };
+
+class Dog {
+private:
+	int id { SN++ };		// 개 마다 고유의 식별번호를 준다
+	string name;
+	int age;
+
+public:
+	// 생성자 - 객체가 만들어질때 메모리를 어떻게 설정할 건가?
+	Dog() : name { "없음" }, age {}
+	{
+		name += to_string(uid( dre ));		// itoa
+		age = uid( dre );
+		//cout << id << " - 디폴트 생성자" << endl;
+	}
+
+	// 만일 객체가 복사된다면 이 함수가 불린다
+	Dog( const Dog& other ) : name{other.name}, age{other.age}
+	{
+		cout << "어 객체가 복사되는걸!" << endl;
+	}
+
+
+	// 소멸자 - 생성시 자원을 할당했다면 소멸자를 코딩해야 한다
+	~Dog()
+	{
+		//cout << id << " - 소멸자" << endl;
+	}
+	
+	// 멤버변수의 값을 읽게 하려면 gettor를 코딩
+	string getName() const		// const는 이 함수가 멤버변수를 읽기만 함을 보증
+	{
+		return name;
+	};
+
+	int getAge() const
+	{
+		return age;
+	};
+
+	// 멤버변수의 값을 쓰게 하려면 settor를 코딩
+
+
+	void run()
+	{
+		cout << id << " - " << name << " - " << age << " 달린다" << endl;
+	}
+
+	void show() const
+	{
+		cout << id << " - " << name << ", " << age << "개월" << endl;
+	}
+};
+
+// [문제] 이 프로그램은 어떤 문제가 있는데 찾을 수 있을까?
+//                     /\
+//             메모리 사용 면에서
+
+int main()
+{
+	Dog dogs[ 100 ];
+
+	sort( begin( dogs ), end( dogs ), [](const Dog& a, const Dog& b){			// &를 붙히지 않으면 다른 코드와 똑같이 객체를 복사함 그것도 엄청 많이
+		return a.getAge() < b.getAge();
+	});
+
+	for( const Dog& dog : dogs )	// show 함수에도 const가 붙어야함
+		dog.show();
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 21 14:07:41 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 21 월 C++                           월56수34          (8주 1일)
+//
+//
+//
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include <algorithm>
+#include "save.h"
+
+using namespace std;
+
+// const와 &의 정확한 사용범의 매우 중요함
+// const - 객체를 읽기만 하겠다는 말
+// & - 객체를 복사하지 않겠어, 포인팅만 하겠어, 원본을 직접 사용하겠어
+
+int SN {};
+
+default_random_engine dre;
+uniform_int_distribution<int> uid { 1, 150 };
+
+class Dog {
+private:
+	int id { SN++ };		// 개 마다 고유의 식별번호를 준다
+	string name;
+	int age;
+
+public:
+	// 생성자 - 객체가 만들어질때 메모리를 어떻게 설정할 건가?
+	Dog() : name { "없음" }, age {}
+	{
+		name += to_string(uid( dre ));		// itoa
+		age = uid( dre );
+		//cout << id << " - 디폴트 생성자" << endl;
+	}
+
+	// 만일 객체가 복사된다면 이 함수가 불린다
+	Dog( const Dog& other ) : name{other.name}, age{other.age}
+	{
+		cout << "어 객체가 복사되는걸!" << endl;
+	}
+
+
+	// 소멸자 - 생성시 자원을 할당했다면 소멸자를 코딩해야 한다
+	~Dog()
+	{
+		//cout << id << " - 소멸자" << endl;
+	}
+	
+	// 멤버변수의 값을 읽게 하려면 gettor를 코딩
+	string getName() const		// const는 이 함수가 멤버변수를 읽기만 함을 보증
+	{
+		return name;
+	};
+
+	int getAge() const
+	{
+		return age;
+	};
+
+	// 멤버변수의 값을 쓰게 하려면 settor를 코딩
+
+
+	void run()
+	{
+		cout << id << " - " << name << " - " << age << " 달린다" << endl;
+	}
+
+	void show() const
+	{
+		cout << id << " - " << name << ", " << age << "개월" << endl;
+	}
+};
+
+// [문제] 이 프로그램은 어떤 문제가 있는데 찾을 수 있을까?
+//                     /\
+//             메모리 사용 면에서
+
+int main()
+{
+	Dog dogs[ 100 ];
+
+	sort( begin( dogs ), end( dogs ), [](const Dog& a, const Dog& b){			// &를 붙히지 않으면 다른 코드와 똑같이 객체를 복사함 그것도 엄청 많이
+		return a.getAge() < b.getAge();
+	});
+
+	for( const Dog& dog : dogs )	// show 함수에도 const가 붙어야함
+		dog.show();
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 21 14:52:28 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 21 월 C++                           월56수34          (8주 1일)
+//
+//
+//
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+};
+
+// [문제] main 수정없이 실행되눈  class INT 를 코딩하자
+
+
+int main()
+{
+	INT a;
+	INT b { 10 };
+	INT c;
+
+	c = a + b;	// 1. a.operator+( b )
+			// 2. operator+( a, b )
+
+	// a + b 는 systatic sugar 이다.
+	// 컴파일러는 a.operator+( b ) 를 찾는다.
+	//              \/
+	// 컴파일러는 INT + INT 를 어떻게 해석할까?
+	// 1. INT라는 class 에 operator+ 라는 이름의 멤버함수가 있는지 찾는다
+	// 2. operator+ 라는 이름의 전역함수가 있는지 찾는다
+
+
+	//cout << c << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 21 15:20:20 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 21 월 C++                           월56수34          (8주 1일)
+//
+//
+//
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <random>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );	// 거의 이런 경우에서만 사용함, 상속보다 횔씬 높은 힘을 가짐
+
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+// 출력함수 - 전역으로 작성한다
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+// [문제] 파일에 있는 INT 100개 정보를 읽어 화면 출력하라
+
+int main()
+{
+	/*
+	INT n = 100;
+
+	++n;
+	n++;	// X
+	*/
+
+	/*
+	ifstream in { "INT 100개.txt" };
+
+	INT a;
+	while( in >> a )
+		cout << a << endl;
+	*/
+
+	/*
+	INT a[ 100 ];
+
+	default_random_engine dre;
+	uniform_int_distribution<> uid(0,1000);
+
+	for( INT& d : a )
+		d = uid( dre );
+
+	ofstream out { "INT 100개.txt" };
+
+	for( INT d : a )
+		out << d << endl;
+	*/
+
+	INT a;
+	INT b { 10 };
+	INT c;
+
+	c = a + b;	// a.operator+(b)
+
+	c = 3 + a;	// 3.operator+(a) --> operator+( a,b )
+
+	cout << c << endl; // 1. cout.operator<<(c)
+					// 2. operator( cout, c )
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 21 16:01:36 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 21 월 C++                           월56수34          (8주 1일)
+//
+//
+//
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <random>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+// [문제] 파일에 있는 INT 100개 정보를 읽어 화면 출력하라
+
+int main()
+{
+	/*
+	INT n = 100;
+
+	++n;
+	n++;	// X
+	*/
+
+	/*
+	ifstream in { "INT 100개.txt" };
+
+	INT a;
+	while( in >> a )
+		cout << a << endl;
+	*/
+
+	INT a[ 100 ];
+
+	default_random_engine dre;
+	uniform_int_distribution<> uid(0,1000);
+
+	for( INT& d : a )
+		d = uid( dre );
+
+	ofstream out { "INT 100개.txt" };
+
+	for( INT d : a )
+		out << d << endl;
+
+	save( "소스.cpp" );
+}
