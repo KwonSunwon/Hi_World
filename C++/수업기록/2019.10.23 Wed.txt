@@ -1,0 +1,1285 @@
+
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 11:38:42 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+
+	//friend fstream& operator>>( fstream&, const INT& );
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+//fstream& operator>>( fstream& fs, const INT& i )
+//{
+
+//}
+
+
+// [문제] 파일에 있는 INT 100개 정보를 읽어 화면 출력하라
+
+int main()
+{
+	/*
+	INT n = 100;
+
+	++n;
+	n++;	// X
+	*/
+	
+	ifstream in { "INT 100개.txt" };
+	cout << sizeof( in ) << endl;
+
+//	INT a;
+//	while( in >> a )
+//		cout << a << endl;
+	
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 11:39:18 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+
+	//friend fstream& operator>>( fstream&, const INT& );
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+//fstream& operator>>( fstream& fs, const INT& i )
+//{
+
+//}
+
+
+// [문제] 파일에 있는 INT 100개 정보를 읽어 화면 출력하라
+
+int main()
+{
+	/*
+	INT n = 100;
+
+	++n;
+	n++;	// X
+	*/
+	
+	ifstream in { "INT 100개.ddtxt" };
+	
+	if( !in )
+		cout << "파일이 없나봐" << endl;
+
+//	INT a;
+//	while( in >> a )
+//		cout << a << endl;
+	
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 11:44:42 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+	friend istream& operator>>( istream&, INT& );		// 읽어온다 - 쓰기를 한다 - const를 붙히면 못 쓰겠지?
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+// 입출력함수 - 전역으로 작성한다
+
+istream& operator>>( istream& is, INT& i )
+{
+	is >> i.val;
+	return is;
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+
+// [문제] 파일에 있는 INT 100개 정보를 읽어 화면 출력하라
+
+int main()
+{
+	/*
+	INT n = 100;
+
+	++n;
+	n++;	// X
+	*/
+	
+	ifstream in { "INT 100개.txt" };
+	
+	INT a;
+	while( in >> a )		// istream& operator>>( istream&, INT& )
+		cout << a << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 11:46:54 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+	friend istream& operator>>( istream&, INT& );		// 읽어온다 - 쓰기를 한다 - const를 붙히면 못 쓰겠지?
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+// 입출력함수 - 전역으로 작성한다
+
+istream& operator>>( istream& is, INT& i )
+{
+	is >> i.val;
+	return is;
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+
+// [문제] 파일에 있는 INT 100개 정보를 읽어 화면 출력하라
+
+int main()
+{
+	/*
+	INT n = 100;
+
+	++n;
+	n++;	// X
+	*/
+	
+	ifstream in { "INT 100개.txt" };
+	
+	INT a;
+	while( in >> a )		// istream& operator>>( istream&, INT& )
+		cout << a << '\t';	// 어떤 것이든 이런식으로 불러올 수 있다(but, 느리다)
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 11:48:43 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+	friend istream& operator>>( istream&, INT& );		// 읽어온다 - 쓰기를 한다 - const를 붙히면 못 쓰겠지?
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+// 입출력함수 - 전역으로 작성한다
+
+istream& operator>>( istream& is, INT& i )
+{
+	is >> i.val;
+	return is;
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+
+// [문제] main이 실행되게 하자
+
+int main()
+{
+	int a { 10 };
+	
+	++a;
+
+	cout << a << endl;
+	
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 11:59:34 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	// prefix increment operator++
+
+	INT& operator++( )
+	{
+		++val;
+		return *this;		// this포인터 - 자기자신에 *면 진짜 자기자신
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+	friend istream& operator>>( istream&, INT& );		// 읽어온다 - 쓰기를 한다 - const를 붙히면 못 쓰겠지?
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+// 입출력함수 - 전역으로 작성한다
+
+istream& operator>>( istream& is, INT& i )
+{
+	is >> i.val;
+	return is;
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+
+// [문제] main이 실행되게 하자
+
+int main()
+{
+	INT a { 10 };
+	
+	++a;		// INT& a.operator++()
+	
+	cout << a << endl;
+	
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 11:59:54 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	// prefix increment operator++
+
+	INT& operator++( )
+	{
+		++val;
+		return *this;		// this포인터 - 자기자신에 *면 진짜 자기자신
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+	friend istream& operator>>( istream&, INT& );		// 읽어온다 - 쓰기를 한다 - const를 붙히면 못 쓰겠지?
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+// 입출력함수 - 전역으로 작성한다
+
+istream& operator>>( istream& is, INT& i )
+{
+	is >> i.val;
+	return is;
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+
+// [문제] main이 실행되게 하자
+
+int main()
+{
+	INT a { 10 };
+	
+	++ ++a;		// INT& a.operator++()
+	
+	cout << a << endl;
+	
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 12:01:31 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	// prefix increment operator++
+
+	INT& operator++( )
+	{
+		++val;
+		return *this;		// this포인터 - 자기자신에 *면 진짜 자기자신
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+	friend istream& operator>>( istream&, INT& );		// 읽어온다 - 쓰기를 한다 - const를 붙히면 못 쓰겠지?
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+// 입출력함수 - 전역으로 작성한다
+
+istream& operator>>( istream& is, INT& i )
+{
+	is >> i.val;
+	return is;
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+
+// [문제] main이 실행되게 하자
+
+int main()
+{
+	INT a { 10 };
+	
+	//++ ++a;
+	( a.operator++() ).operator++();
+
+	cout << a << endl;
+	
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 12:05:48 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	// prefix increment operator++
+
+	INT& operator++( )
+	{
+		++val;
+		return *this;		// this포인터 - 자기자신에 *면 진짜 자기자신
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+	friend istream& operator>>( istream&, INT& );		// 읽어온다 - 쓰기를 한다 - const를 붙히면 못 쓰겠지?
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+// 입출력함수 - 전역으로 작성한다
+
+istream& operator>>( istream& is, INT& i )
+{
+	is >> i.val;
+	return is;
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+
+// [문제] main이 실행되게 하자
+
+int main()
+{
+	INT a { 10 };
+
+//	a++;		// 왜 컴파일이 안되나? - a.operator++( int )를 찾는다
+//	a++ ++;		// 왜 posfix increment는 연속해서 사용할 수 없나?
+
+	cout << a << endl;
+	
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 12:11:00 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	// prefix increment operator++
+
+	INT& operator++( )
+	{
+		++val;
+		return *this;		// this포인터 - 자기자신에 *면 진짜 자기자신
+	}
+
+	// posfix increment operator++
+	int operator++( int )
+	{
+		// 내 현재 값을 저장한다
+		int temp { val };	// INT temp { val }
+		// 내 값이 1 증가 한다
+		++( *this );
+		// 저장한 값을 되돌려 준다
+		return temp;
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+	friend istream& operator>>( istream&, INT& );		// 읽어온다 - 쓰기를 한다 - const를 붙히면 못 쓰겠지?
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+// 입출력함수 - 전역으로 작성한다
+
+istream& operator>>( istream& is, INT& i )
+{
+	is >> i.val;
+	return is;
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+
+// [문제] main이 실행되게 하자
+
+int main()
+{
+	INT a { 10 };
+
+	a++;		// 왜 컴파일이 안되나? - a.operator++( int )를 찾는다
+//	a++ ++;		// 왜 posfix increment는 연속해서 사용할 수 없나?
+
+	cout << a << endl;
+	
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 12:11:30 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	// prefix increment operator++
+
+	INT& operator++( )
+	{
+		++val;
+		return *this;		// this포인터 - 자기자신에 *면 진짜 자기자신
+	}
+
+	// posfix increment operator++
+	INT operator++( int )
+	{
+		// 내 현재 값을 저장한다
+		INT temp { val };	// INT temp { val }
+		// 내 값이 1 증가 한다
+		++( *this );
+		// 저장한 값을 되돌려 준다
+		return temp;
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+	friend istream& operator>>( istream&, INT& );		// 읽어온다 - 쓰기를 한다 - const를 붙히면 못 쓰겠지?
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+// 입출력함수 - 전역으로 작성한다
+
+istream& operator>>( istream& is, INT& i )
+{
+	is >> i.val;
+	return is;
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+
+// [문제] main이 실행되게 하자
+
+int main()
+{
+	INT a { 10 };
+
+	a++;		// 왜 컴파일이 안되나? - a.operator++( int )를 찾는다
+//	a++ ++;		// 왜 posfix increment는 연속해서 사용할 수 없나?
+
+	cout << a << endl;
+	
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 12:17:19 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <fstream>
+#include "save.h"
+
+using namespace std;
+
+class INT {
+private:
+	int val;
+public:
+	INT() : val { 0 }
+	{
+	}
+	INT( int n ) : val { n }
+	{
+	}
+
+	int operator+( INT rhs ) 
+	{
+		return val + rhs.val;
+	}
+	
+	int getVal() const
+	{
+		return val;
+	}
+
+	// prefix increment operator++
+
+	INT& operator++( )
+	{
+		++val;
+		return *this;		// this포인터 - 자기자신에 *면 진짜 자기자신
+	}
+
+	// posfix increment operator++
+	int operator++( int )
+	{
+		// 내 현재 값을 저장한다
+		int temp { val };	// INT temp { val }
+		// 내 값이 1 증가 한다
+		++( *this );
+		// 저장한 값을 되돌려 준다
+		return temp;
+	}
+
+	friend ostream& operator<<( ostream&, const INT& );
+	friend istream& operator>>( istream&, INT& );		// 읽어온다 - 쓰기를 한다 - const를 붙히면 못 쓰겠지?
+};
+
+int operator+( int, INT );
+
+int operator+( int n, INT i )
+{
+	return n + i.getVal();
+}
+
+// 입출력함수 - 전역으로 작성한다
+
+istream& operator>>( istream& is, INT& i )
+{
+	is >> i.val;
+	return is;
+}
+
+ostream& operator<<( ostream& os, const INT& i )
+{
+	os << i.val;
+	return os;
+}
+
+
+// [문제] main이 실행되게 하자
+
+int main()
+{
+	INT a { 10 };
+
+	//a++ ++; --> ( int )++ --> 이름이 없어서 호출을 못해 : ( int ) 이름없는객체 - rvalue
+
+	cout << a << endl;
+	
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 12:34:03 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+
+using namespace std;
+
+int main()
+{
+	string s { "길이에 관계없이 문자를 저장한다" };
+	string t = s + " + 연산을 이용하여 글자를 덧 붙일 수 있다";
+
+	cout << s << endl;
+	cout << t << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 12:37:08 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+
+using namespace std;
+
+int main()
+{
+	string a { "Hellow," };
+	string b { "world!" };
+	string c = a + b;
+
+	cout << c << endl;
+	for( char c : c )
+		cout << c << ' ';
+	cout << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 13:12:55 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+#pragma warning(disable:4996)
+
+using namespace std;
+
+// [문제] STRING은 길이에 관계없이 문자영을 저장한다
+// main이 실행되게 하자
+
+class STRING {
+private:
+	int len;
+	char* p;
+public:
+	STRING( const char* str )
+	{
+		// 전달된 str의 글자수를 세서 메모리를 마련한 후 저장
+		len = strlen( str );
+		p = new char[ len ];
+		strcpy( p, str );
+	}
+	friend ostream& operator<<( ostream&, const STRING& );
+};
+
+ostream& operator<<( ostream& os, const STRING& str)
+{	
+	for( int i = 0; i < str.len; ++i )
+		os << *( str.p + i );
+//	os << str.p;
+	return os;
+}
+
+int main()
+{
+	STRING a { "Hellow," };
+	STRING b { "world!" };
+//	STRING c = a + b;
+
+
+	cout << a << endl;
+
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Oct 23 13:13:03 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 23 수 C++                           월56수34          (8주 2일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+#pragma warning(disable:4996)
+
+using namespace std;
+
+// [문제] STRING은 길이에 관계없이 문자영을 저장한다
+// main이 실행되게 하자
+
+class STRING {
+private:
+	int len;
+	char* p;
+public:
+	STRING( const char* str )
+	{
+		// 전달된 str의 글자수를 세서 메모리를 마련한 후 저장
+		len = strlen( str );
+		p = new char[ len ];
+		strcpy( p, str );
+	}
+	friend ostream& operator<<( ostream&, const STRING& );
+};
+
+ostream& operator<<( ostream& os, const STRING& str)
+{	
+//	for( int i = 0; i < str.len; ++i )		// 둘 다 가능, 위에꺼 이해 해보기
+//		os << *( str.p + i );
+	os << str.p;
+	return os;
+}
+
+int main()
+{
+	STRING a { "Hellow," };
+	STRING b { "world!" };
+//	STRING c = a + b;
+
+
+	cout << a << endl;
+
+
+	save( "소스.cpp" );
+}
