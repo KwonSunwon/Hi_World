@@ -18,7 +18,10 @@
 아래 왜 안됨?
 
 
+
 ~~ : len { other.len } ~~ {~~}// 생성자에서만 가능한 문법
+
+
 
 STRING& operator+( const STRING& rhs ) const
 	{
@@ -29,8 +32,10 @@ STRING& operator+( const STRING& rhs ) const
 		memcpy( res.p, p, len );
 		memcpy( res.p + len, rhs.p, rhs.len );
 
-		return res;		// 이거 오류 확인
-	}
+		return res;		// 이거 오류 확인 --> 첫 줄 STRING& -> STRING
+	}				// 이 안에서는 res가 리턴 되고 res가 임시기때문에
+					// 사라지는데 &가 진짜 값을 가져오려고 하기때문에
+					// 이미 사라져있는 것을 가져오려고 해서 오류남
 
 
 int main(){
