@@ -1,0 +1,551 @@
+
+
+
+----------------------------------------------------------------------------
+Mon Oct 28 13:53:35 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 28 월 C++                           월56수34          (9주 1일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+#pragma warning(disable:4996)
+
+using namespace std;
+
+// [문제] STRING은 길이에 관계없이 문자형을 저장한다
+// main이 실행되게 하자
+
+class STRING {
+private:
+	size_t len;		// size_t = unsigned int
+	char* p;
+public:
+	STRING( const char* str )
+	{
+		// 전달된 str의 글자수를 세서 메모리를 마련한 후 저장
+		len = strlen( str );
+		p = new char[ len ];
+		memcpy( p, str, len );		// 잡은 메모리 p에 str의 데이터를 len 크기만큼 복사
+	}
+
+	// 생성자 자원을 확보했다면 반드시
+	// 소멸자에서 확보한 자원을 되돌려줘야 한다
+	~STRING() {
+		if( len != 0 )
+			delete[] p;
+	}
+	friend ostream& operator<<( ostream&, const STRING& );
+};
+
+ostream& operator<<( ostream& os, const STRING& str)
+{	
+	for( int i = 0; i < str.len; ++i )
+		os << *( str.p + i );
+//	os << str.p;
+	return os;
+}
+
+int main()
+{
+	STRING a { "Hellow," };		// STRING( "Hellow," )
+	STRING b = a;			// a를 복사하여 b를 생성
+
+	cout << a << endl;
+	cout << b << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 28 15:07:00 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 28 월 C++                           월56수34          (9주 1일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+#pragma warning(disable:4996)
+
+using namespace std;
+
+// [문제] STRING은 길이에 관계없이 문자형을 저장한다
+// main이 실행되게 하자
+
+class STRING {
+private:
+	size_t len;		// size_t = unsigned int
+	char* p;
+public:
+	STRING() : len { 0 }, p { nullptr }{
+
+	}
+	STRING( const char* str )
+	{
+		// 전달된 str의 글자수를 세서 메모리를 마련한 후 저장
+		len = strlen( str );
+		p = new char[ len ];
+		memcpy( p, str, len );		// 잡은 메모리 p에 str의 데이터를 len 크기만큼 복사
+	}
+	// 생성자 자원을 확보했다면 반드시
+	// 소멸자에서 확보한 자원을 되돌려줘야 한다
+	~STRING() {
+		if( len != 0 )
+			delete[] p;
+	}
+
+	// 복사생성자
+	STRING( const STRING& other ) : len { other.len }	// 생성자에서만 가능한 문법
+	{
+		p = new char[ len ];
+		// 깊은 복사를 해야 dangling pointer가 안 만들어 진다
+		memcpy( p, other.p, len );
+	}
+	// copy assignment operator
+	STRING& operator=( const STRING& rhs )
+	{
+		// a = a; 이럴땐 아무일도 안해야 함
+		if( this == &rhs )
+			return *this;
+		if( len != 0 )
+			delete[] p;
+		len = rhs.len;
+		p = new char[ len ];
+		memcpy( p, rhs.p, len );
+		//return *this;				// STRING& ~~ return *this - 연산의 결과가 자기 자신이 리턴되도록 - b = a = c 가 가능하도록
+	}
+
+	STRING operator+( const STRING& rhs ) const
+	{
+		STRING res;
+		res.len = len + rhs.len;
+		res.p = new char[ res.len ];
+		
+		memcpy( res.p, p, len );
+		memcpy( res.p + len, rhs.p, rhs.len );
+
+		return res;
+	}
+
+	size_t length() const
+	{
+		return len;
+	}
+
+	char operator[]( int idx ) const
+	{
+		return *( p + idx );
+	}
+
+	friend ostream& operator<<( ostream&, const STRING& );
+};
+
+ostream& operator<<( ostream& os, const STRING& str)
+{	
+	for( int i = 0; i < str.len; ++i )
+		os << *( str.p + i );
+//	os << str.p;
+	return os;
+}
+
+int main()
+{
+	STRING a { "Hello, world!" };
+
+	for( int i = 0; i < a.length(); ++i )
+		cout << a[ i ] << ' ';		// a[i] 는 a.operator[]( i );
+	cout << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 28 15:09:45 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 28 월 C++                           월56수34          (9주 1일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+#pragma warning(disable:4996)
+
+using namespace std;
+
+// [문제] STRING은 길이에 관계없이 문자형을 저장한다
+// main이 실행되게 하자
+
+class STRING {
+private:
+	size_t len;		// size_t = unsigned int
+	char* p;
+public:
+	STRING() : len { 0 }, p { nullptr }{
+
+	}
+	STRING( const char* str )
+	{
+		// 전달된 str의 글자수를 세서 메모리를 마련한 후 저장
+		len = strlen( str );
+		p = new char[ len ];
+		memcpy( p, str, len );		// 잡은 메모리 p에 str의 데이터를 len 크기만큼 복사
+	}
+	// 생성자 자원을 확보했다면 반드시
+	// 소멸자에서 확보한 자원을 되돌려줘야 한다
+	~STRING() {
+		if( len != 0 )
+			delete[] p;
+	}
+
+	// 복사생성자
+	STRING( const STRING& other ) : len { other.len }	// 생성자에서만 가능한 문법
+	{
+		p = new char[ len ];
+		// 깊은 복사를 해야 dangling pointer가 안 만들어 진다
+		memcpy( p, other.p, len );
+	}
+	// copy assignment operator
+	STRING& operator=( const STRING& rhs )
+	{
+		// a = a; 이럴땐 아무일도 안해야 함
+		if( this == &rhs )
+			return *this;
+		if( len != 0 )
+			delete[] p;
+		len = rhs.len;
+		p = new char[ len ];
+		memcpy( p, rhs.p, len );
+		//return *this;				// STRING& ~~ return *this - 연산의 결과가 자기 자신이 리턴되도록 - b = a = c 가 가능하도록
+	}
+
+	STRING operator+( const STRING& rhs ) const
+	{
+		STRING res;
+		res.len = len + rhs.len;
+		res.p = new char[ res.len ];
+		
+		memcpy( res.p, p, len );
+		memcpy( res.p + len, rhs.p, rhs.len );
+
+		return res;		// 이거 오류 확인
+	}
+
+	size_t length() const
+	{
+		return len;
+	}
+
+	char operator[]( int idx ) const
+	{
+		return *( p + idx );
+	}
+
+	char* begin() const
+	{
+		return p;
+	};
+	char* end() const
+	{
+		return p + len;
+	};
+
+	friend ostream& operator<<( ostream&, const STRING& );
+};
+
+ostream& operator<<( ostream& os, const STRING& str)
+{	
+	for( int i = 0; i < str.len; ++i )
+		os << *( str.p + i );
+//	os << str.p;
+	return os;
+}
+
+int main()
+{
+	STRING a { "Hello, world!" };
+
+	for( char c : a )
+		cout << c << ' ';
+	cout << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 28 15:11:57 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 28 월 C++                           월56수34          (9주 1일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+#pragma warning(disable:4996)
+
+using namespace std;
+
+// [문제] STRING은 길이에 관계없이 문자형을 저장한다
+// main이 실행되게 하자
+
+class STRING {
+private:
+	size_t len;		// size_t = unsigned int
+	char* p;
+public:
+	STRING() : len { 0 }, p { nullptr }{
+
+	}
+	STRING( const char* str )
+	{
+		// 전달된 str의 글자수를 세서 메모리를 마련한 후 저장
+		len = strlen( str );
+		p = new char[ len ];
+		memcpy( p, str, len );		// 잡은 메모리 p에 str의 데이터를 len 크기만큼 복사
+	}
+	// 생성자 자원을 확보했다면 반드시
+	// 소멸자에서 확보한 자원을 되돌려줘야 한다
+	~STRING() {
+		if( len != 0 )
+			delete[] p;
+	}
+
+	// 복사생성자
+	STRING( const STRING& other ) : len { other.len }	// 생성자에서만 가능한 문법
+	{
+		p = new char[ len ];
+		// 깊은 복사를 해야 dangling pointer가 안 만들어 진다
+		memcpy( p, other.p, len );
+	}
+	// copy assignment operator
+	STRING& operator=( const STRING& rhs )
+	{
+		// a = a; 이럴땐 아무일도 안해야 함
+		if( this == &rhs )
+			return *this;
+		if( len != 0 )
+			delete[] p;
+		len = rhs.len;
+		p = new char[ len ];
+		memcpy( p, rhs.p, len );
+		//return *this;				// STRING& ~~ return *this - 연산의 결과가 자기 자신이 리턴되도록 - b = a = c 가 가능하도록
+	}
+
+	STRING operator+( const STRING& rhs ) const
+	{
+		STRING res;
+		res.len = len + rhs.len;
+		res.p = new char[ res.len ];
+		
+		memcpy( res.p, p, len );
+		memcpy( res.p + len, rhs.p, rhs.len );
+
+		return res;		// 이거 오류 확인
+	}
+
+	size_t length() const
+	{
+		return len;
+	}
+
+	char operator[]( int idx ) const
+	{
+		return *( p + idx );
+	}
+
+	char* begin() const
+	{
+		return p;
+	};
+	char* end() const
+	{
+		return p + len;
+	};
+
+	friend ostream& operator<<( ostream&, const STRING& );
+};
+
+ostream& operator<<( ostream& os, const STRING& str)
+{	
+	for( int i = 0; i < str.len; ++i )
+		os << *( str.p + i );
+//	os << str.p;
+	return os;
+}
+
+int main()
+{
+	STRING a { "Hello, world!" };
+
+	// [문제] a를 모두 대문자로 바꿔라
+	for( char& c : a )
+		c = toupper( c );
+
+	cout << a << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Mon Oct 28 15:18:36 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 10. 28 월 C++                           월56수34          (9주 1일)
+//
+// 연산자 오버로딩(operator overloading)
+//  - 내가 만든 자료형도 POD와 유사하게 코딩 할 수 있으면 좋겠어
+//
+// 시험 2 - 11/4 (10주 1일) 예정
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+#pragma warning(disable:4996)
+
+using namespace std;
+
+// [문제] STRING은 길이에 관계없이 문자형을 저장한다
+// main이 실행되게 하자
+
+class STRING {
+private:
+	size_t len;		// size_t = unsigned int
+	char* p;
+public:
+	STRING() : len { 0 }, p { nullptr }{
+
+	}
+	STRING( const char* str )
+	{
+		// 전달된 str의 글자수를 세서 메모리를 마련한 후 저장
+		len = strlen( str );
+		p = new char[ len ];
+		memcpy( p, str, len );		// 잡은 메모리 p에 str의 데이터를 len 크기만큼 복사
+	}
+	// 생성자 자원을 확보했다면 반드시
+	// 소멸자에서 확보한 자원을 되돌려줘야 한다
+	~STRING() {
+		if( len != 0 )
+			delete[] p;
+	}
+
+	// 복사생성자
+	STRING( const STRING& other ) : len { other.len }	// 생성자에서만 가능한 문법
+	{
+		p = new char[ len ];
+		// 깊은 복사를 해야 dangling pointer가 안 만들어 진다
+		memcpy( p, other.p, len );
+	}
+	// copy assignment operator
+	STRING& operator=( const STRING& rhs )
+	{
+		// a = a; 이럴땐 아무일도 안해야 함
+		if( this == &rhs )
+			return *this;
+		if( len != 0 )
+			delete[] p;
+		len = rhs.len;
+		p = new char[ len ];
+		memcpy( p, rhs.p, len );
+		//return *this;				// STRING& ~~ return *this - 연산의 결과가 자기 자신이 리턴되도록 - b = a = c 가 가능하도록
+	}
+
+	STRING operator+( const STRING& rhs ) const
+	{
+		STRING res;
+		res.len = len + rhs.len;
+		res.p = new char[ res.len ];
+		
+		memcpy( res.p, p, len );
+		memcpy( res.p + len, rhs.p, rhs.len );
+
+		return res;		// 이거 오류 확인 -- STRING& -> STTRING
+	}
+
+	size_t length() const
+	{
+		return len;
+	}
+
+	char operator[]( int idx ) const
+	{
+		return *( p + idx );
+	}
+
+	char& operator[]( int idx )
+	{
+		return *( p + idx );
+	}
+
+	char* begin() const
+	{
+		return p;
+	};
+	char* end() const
+	{
+		return p + len;
+	};
+
+	friend ostream& operator<<( ostream&, const STRING& );
+};
+
+ostream& operator<<( ostream& os, const STRING& str)
+{	
+	for( int i = 0; i < str.len; ++i )
+		os << *( str.p + i );
+//	os << str.p;
+	return os;
+}
+
+int main()
+{
+	STRING a { "Hello, world!" };
+
+	// [문제] a를 모두 대문자로 바꿔라
+	for( int i = 0 ; i < a.length() ; ++i)
+		a[i] = toupper( a[i] );
+
+	cout << a << endl;
+
+	save( "소스.cpp" );
+}

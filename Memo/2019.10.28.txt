@@ -1,0 +1,41 @@
+// 교수님 코드
+	STRING( const STRING& other ) : len { other.len }
+	{
+		p = new char[ len ];
+		// 깊은 복사를 해야 dangling pointer가 안 만들어 진다
+		memcpy( p, other.p, len );
+	}
+
+// 내 코드
+	STRING( const STRING& other )
+	{
+		len = strlen( other.p )
+		p = new char[ len ];
+		// 깊은 복사를 해야 dangling pointer가 안 만들어 진다
+		memcpy( p, other.p, len );
+	}
+
+아래 왜 안됨?
+
+
+~~ : len { other.len } ~~ {~~}// 생성자에서만 가능한 문법
+
+STRING& operator+( const STRING& rhs ) const
+	{
+		STRING res;
+		res.len = len + rhs.len;
+		res.p = new char[ res.len ];
+		
+		memcpy( res.p, p, len );
+		memcpy( res.p + len, rhs.p, rhs.len );
+
+		return res;		// 이거 오류 확인
+	}
+
+
+int main(){
+	~~
+	string c = a + b;
+	~~
+}
+오류
