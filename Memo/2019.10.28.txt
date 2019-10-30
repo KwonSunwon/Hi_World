@@ -1,4 +1,4 @@
-// 교수님 코드
+
 	STRING( const STRING& other ) : len { other.len }
 	{
 		p = new char[ len ];
@@ -6,16 +6,18 @@
 		memcpy( p, other.p, len );
 	}
 
-// 내 코드
+
 	STRING( const STRING& other )
 	{
-		len = strlen( other.p )
+		len = strlen( other.p );
 		p = new char[ len ];
 		// 깊은 복사를 해야 dangling pointer가 안 만들어 진다
 		memcpy( p, other.p, len );
 	}
 
-아래 왜 안됨?
+// strlen - const char* 형의 길이 출력
+// 복사된 p는 char* 이어서
+
 
 
 
