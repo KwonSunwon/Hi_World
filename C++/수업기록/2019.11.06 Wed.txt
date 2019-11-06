@@ -1,0 +1,134 @@
+
+
+
+----------------------------------------------------------------------------
+Wed Nov  6 14:48:50 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 06 수 C++                           월56수34          (10주 1일)
+//
+// 
+// 
+//-----------------------------------------------------------------------------
+
+
+#include <iostream>
+#include <string>
+#include "save.h"
+#pragma warning(disable:4996)
+
+using namespace std;
+
+class STRING {
+private:
+	size_t len;	
+	char* p;
+public:
+	STRING() : len { 0 }, p { nullptr }{
+
+	}
+	STRING( const char* str )
+	{
+		len = strlen( str );
+		p = new char[ len ];
+		memcpy( p, str, len );
+	}
+	
+	~STRING()
+	{
+		if( len != 0 )
+			delete[] p;
+	}
+
+	STRING( const STRING& other ) : len { other.len }	
+	{
+		p = new char[ len ];
+		memcpy( p, other.p, len );
+	}
+
+	STRING& operator=( const STRING& rhs )
+	{
+		if( this == &rhs )
+			return *this;
+		if( len != 0 )
+			delete[] p;
+		len = rhs.len;
+		p = new char[ len ];
+		memcpy( p, rhs.p, len );
+		return *this;				
+	}
+
+	STRING operator+( const STRING& rhs ) const
+	{
+		STRING res;
+		res.len = len + rhs.len;
+		res.p = new char[ res.len ];
+
+		memcpy( res.p, p, len );
+		memcpy( res.p + len, rhs.p, rhs.len );
+
+		return res;
+	}
+
+	size_t length() const
+	{
+		return len;
+	}
+
+	char operator[]( int idx ) const
+	{
+		return *( p + idx );
+	}
+
+	char& operator[]( int idx )
+	{
+		return *( p + idx );
+	}
+
+	char* begin() const
+	{
+		return p;
+	};
+	char* end() const
+	{
+		return p + len;
+	};
+
+	friend ostream& operator<<( ostream&, const STRING& );
+};
+
+ostream& operator<<( ostream& os, const STRING& str )
+{
+	os << str.p;
+	return os;
+}
+
+// 클래스 간의 관계
+
+// 클래스를 어떻게 이용할 수 있나?
+// A와 STRING 간의 관계
+
+// 너는 항상 대문자로 저장하는 string 클래스를 만들어야 한다
+
+class String : public string {	// 상속
+public:
+	String( string s ) : string { s }
+	{
+		string& rs = *this;
+		for( char& c : rs )
+			c = toupper( c );
+	}
+};
+
+int main()
+{
+	//String a = "hello, world";
+
+	//a += "abcd";
+
+	//cout << a << endl;
+
+	save( "소스.cpp" );
+}
