@@ -1,0 +1,345 @@
+// [문제 1]
+
+#include <iostream>
+#include "save.h"
+#pragma warning(disable:4996)	// 보안문제 무시
+
+using namespace std;
+
+class Y {
+};
+
+int main()
+{
+	Y  a;	 // 디폴트 생성자
+	Y b = a; // 복사 생성자
+} //소멸자 * 2
+
+
+
+// [문제 2]
+
+#include <iostream>
+#include "save.h"
+#pragma warning(disable:4996)	// 보안문제 무시
+
+using namespace std;
+
+class Y {
+	int val;
+public:
+	Y( int n ) : val { n }
+	{
+	}
+	int getVal() const
+	{
+		return val;
+	}
+	operator int() const
+	{
+		return val;
+	}
+};
+
+Y big( const Y&, const Y& );
+
+Y big( const Y& a, const Y& b )
+{
+	if( a < b )
+		return b;
+	return a;
+
+	// return a < b ? b : a;
+}
+
+int main()
+{
+	Y a { 1 }, b { 2 };
+	Y c = big( a, b );
+
+	cout << a << "와 " << b << "중 큰 Y는 " << c << endl;
+}
+
+
+
+// [문제 3]
+
+#include <iostream>
+#include <random>
+#include "save.h"
+#pragma warning(disable:4996)	// 보안문제 무시
+
+using namespace std;
+
+
+default_random_engine dre;
+uniform_int_distribution<int> uid;
+uniform_int_distribution<int> uidNum { 1, 1000'0000 };
+
+class MM {
+	int num;
+	int* p;
+public:
+	MM()
+	{
+		num = uidNum( dre );
+		p = new int[ num ];
+		for( int i = 0; i < num; ++i )
+			p[ i ] = uid( dre );
+	}
+	~MM()
+	{
+		delete[] p;
+	}
+
+	int getNum() const
+	{
+		return num;
+	}
+
+	int max() const
+	{
+		int max { 0 };
+		for( int i = 0; i < num; ++i )
+			if( max < p[ i ] )
+				max = p[ i ];
+		return max;
+	}
+};
+
+int main()
+{
+	MM a;
+
+	cout << "a가 확보한 메모리 갯수 - " << a.getNum() << endl;
+	cout << "a의 메모리에서 제일 큰 값 - " << a.max() << endl;
+}
+
+
+// [문제 4]
+
+#include <iostream>
+#include <random>
+#include "save.h"
+#pragma warning(disable:4996)	// 보안문제 무시
+
+using namespace std;
+
+default_random_engine dre;
+uniform_int_distribution<int> uid;
+uniform_int_distribution<int> uidNum { 1, 1000'0000 };
+
+class MM {
+	int num;
+	int* p;
+public:
+	MM()
+	{
+		num = uidNum( dre );
+		p = new int[ num ];
+		for( int i = 0; i < num; ++i )
+			p[ i ] = uid( dre );
+	}
+
+	MM( const MM& other ) : num { other.num }
+	{
+		p = new int[ num ];
+		memcpy( p, other.p, num * sizeof( int ) );
+	}
+
+	~MM()
+	{
+		delete[] p;
+	}
+
+	int getNum() const
+	{
+		return num;
+	}
+
+	int max() const
+	{
+		int max { 0 };
+		for( int i = 0; i < num; ++i )
+			if( max < p[ i ] )
+				max = p[ i ];
+		return max;
+	}
+};
+
+int main()
+{
+	MM a;
+
+	cout << "a가 확보한 메모리 갯수 - " << a.getNum() << endl;
+	cout << "a의 메모리에서 제일 큰 값 - " << a.max() << endl;
+
+	MM b = a;
+
+	cout << "a가 확보한 메모리 갯수 - " << b.getNum() << endl;
+	cout << "a의 메모리에서 제일 큰 값 - " << b.max() << endl;
+}
+
+
+
+// [문제 5]
+
+#include <iostream>
+#include <random>
+#include "save.h"
+#pragma warning(disable:4996)	// 보안문제 무시
+
+using namespace std;
+
+default_random_engine dre;
+uniform_int_distribution<int> uid;
+uniform_int_distribution<int> uidNum { 1, 1000'0000 };
+
+class MM {
+	int num;
+	int* p;
+public:
+	MM()
+	{
+		num = uidNum( dre );
+		p = new int[ num ];
+		for( int i = 0; i < num; ++i )
+			p[ i ] = uid( dre );
+	}
+
+	MM( const MM& other ) : num { other.num }
+	{
+		p = new int[ num ];
+		memcpy( p, other.p, num * sizeof( int ) );
+	}
+
+	~MM()
+	{
+		delete[] p;
+	}
+
+	int getNum() const
+	{
+		return num;
+	}
+
+	int max() const
+	{
+		int max { 0 };
+		for( int i = 0; i < num; ++i )
+			if( max < p[ i ] )
+				max = p[ i ];
+		return max;
+	}
+};
+
+int main()
+{
+	while( true )
+	{
+		cout << "MM을 몇 개나 만들까요? ";
+		int num;
+		cin >> num;
+
+		MM* p = new MM[ num ];	// 이게 다 한건데 안 써놨네 ㅠㅠ
+	}
+}
+
+
+
+// [문제 6]
+
+#include <iostream>
+#include <random>
+#include "save.h"
+#pragma warning(disable:4996)	// 보안문제 무시
+
+using namespace std;
+
+default_random_engine dre;
+uniform_int_distribution<int> uid;
+uniform_int_distribution<int> uidNum { 1, 1000'0000 };
+
+class MM {
+	int num;
+	int* p;
+public:
+	MM()
+	{
+		num = uidNum( dre );
+		p = new int[ num ];
+		for( int i = 0; i < num; ++i )
+			p[ i ] = uid( dre );
+	}
+
+	MM( const MM& other ) : num { other.num }
+	{
+		cout << "복사생성자 호출" << endl;
+		p = new int[ num ];
+		memcpy( p, other.p, num * sizeof( int ) );
+	}
+
+	// 할당연산자
+	MM& operator=( const MM& other )	// sort 함수가 복사생성자와 할당연산자를 제멋대로 이용
+	{
+		cout << "할당연산자 호출" << endl;
+		if( this != &other )
+		{
+			delete[] p;
+			num = other.num;
+			p = new int[ num ];
+			memcpy( p, other.p, num * sizeof( int ) );	// 때문에 할당연사자를 제대로 코딩해주어야함 - 그렇지 않으면 dangling pointer 가 발생함
+		}
+		return *this;
+	}
+
+	~MM()
+	{
+		delete[] p;
+	}
+
+	int getNum() const
+	{
+		return num;
+	}
+
+	int max() const
+	{
+		int max { 0 };
+		for( int i = 0; i < num; ++i )
+			if( max < p[ i ] )
+				max = p[ i ];
+		return max;
+	}
+};
+
+int main()
+{
+	while( true )
+	{
+		cout << "MM을 몇 개나 만들까요? ";
+		int num;
+		cin >> num;
+
+		MM* p = new MM[ num ];
+
+		cout << "sort 함수 호출하기 전 " << endl;
+
+		// begin, end 를 쓰면 안된다. - 포인터이기 때문에
+		sort( p, p + num, []( const MM& a, const MM& b ) {
+			return a.max() < b.max();
+		} );
+
+		cout << "sort 함수 호출한 후 " << endl;
+
+		for( int i = 0; i < num; ++i )
+			cout << p[ i ].max() << endl;
+
+		delete[] p;
+	}
+}
+
+
+
+[문제 7]
+아니오. delete[] p 를 해주어야한다.
