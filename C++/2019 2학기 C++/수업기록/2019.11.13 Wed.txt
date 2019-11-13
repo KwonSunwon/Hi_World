@@ -1,0 +1,566 @@
+
+
+
+----------------------------------------------------------------------------
+Wed Nov 13 11:44:05 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 13  수	   C++월56수34			 (11주 2일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+
+using namespace std;
+
+
+class Animal {
+protected:
+	string name;
+public:
+	Animal ( ) {
+		cout << "Animal 디폴트 생성자" << endl;
+	}
+	~Animal ( ) {
+		cout << "Animal 소멸자" << endl;
+	}
+	virtual void move ( ) const {
+
+	};
+};
+
+class Dog : public Animal {
+public:
+	Dog ( ) {
+		cout << "Dog 디폴트 생성자" << endl;
+	}
+	Dog ( string s ) {
+		cout << "Dog 생성자(string)" << endl;
+		name = s;
+	}
+	~Dog ( ) {
+		cout << "Dog 소멸자" << endl;
+	}
+
+	void move ( ) const override {	// 조상의 함수를 재정의(override)
+									// 함수 overload와 구분하자
+		cout << "달린다"<< endl;
+	}
+};
+
+
+int main()
+{
+	Dog* p = new Dog[2] {{"진돌이"},{"삽살이"}};
+
+	delete[] p;
+
+	save ("소스.cpp");
+}
+
+
+----------------------------------------------------------------------------
+Wed Nov 13 12:09:16 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 13  수	   C++월56수34			 (11주 2일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+
+using namespace std;
+
+class Animal {
+	int a;
+};
+
+class Dog : public Animal {
+	int d;
+};
+
+class Cat : public Animal {
+	int c;
+	int cc;
+};
+
+int main()
+{
+	// 동물 호텔을 운영한다.
+	// 동물을 100마리까지 수용할 수 있다.
+	// 개와 고양이를 손님으로 받을 수 있다.
+
+	// 투숙중인 손님 전체 명단을 출력할 수 있어야 한다.
+
+	// 방에 있는 Animal님은 자신의 정체(개/고양이, 이름)를 밝혀 주세요.
+
+	// 너는 실제 Dog인데 Animal이라고 할 수 있니? --> (Dog -> Animal)항상 성립
+
+	Dog d;
+
+	Dog* p = &d;		// 문제 ㄴㄴ
+	Animal* p2 = &d;		// 문제 ㄴㄴ 잇 파시블, 비코즈 도그 이즈 에니멀
+
+	// 너는 Animal인데 Dog라고 할 수 있니?
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Nov 13 12:48:31 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 13  수	   C++월56수34			 (11주 2일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+
+using namespace std;
+
+class Animal {
+	int a;
+public:
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+};
+
+class Dog : public Animal {
+	int d;
+public:
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int c;
+	int cc;
+public:
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+int main()
+{
+	// 동물 호텔을 운영한다.
+	// 동물을 100마리까지 수용할 수 있다.
+	// 개와 고양이를 손님으로 받을 수 있다.
+
+	// 투숙중인 손님 전체 명단을 출력할 수 있어야 한다.
+
+	// 방에 있는 Animal님은 자신의 정체(개/고양이, 이름)를 밝혀 주세요.
+
+	// 너는 실제 Dog인데 Animal이라고 할 수 있니? --> (Dog -> Animal)항상 성립
+
+	Dog d;
+	Cat c;
+
+	Animal* p;
+
+	p = &d;
+	p->speak();		// 개가 짖는다		// speak (Animal* this)		// 진짜 자신의 함수를 찾아가기 위해 메모리를 하나 더 희생 
+
+	p = &c;
+	p->speak();		// 고양이가 운다
+
+
+	// 너는 Animal인데 Dog라고 할 수 있니?
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Nov 13 12:49:31 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 13  수	   C++월56수34			 (11주 2일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+
+using namespace std;
+
+class Animal {
+	int a;
+public:
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+};
+
+class Dog : public Animal {
+	int d;
+public:
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int c;
+	int cc;
+public:
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+int main()
+{
+	// 동물 호텔을 운영한다.
+	// 동물을 100마리까지 수용할 수 있다.
+	// 개와 고양이를 손님으로 받을 수 있다.
+
+	// 투숙중인 손님 전체 명단을 출력할 수 있어야 한다.
+
+	// 방에 있는 Animal님은 자신의 정체(개/고양이, 이름)를 밝혀 주세요.
+
+	// 너는 실제 Dog인데 Animal이라고 할 수 있니? --> (Dog -> Animal)항상 성립
+
+	Dog d;
+	Cat c;
+
+	Animal* p;
+
+	p = &d;
+	p->speak();		// 개가 짖는다		// speak (Animal* this)		// 진짜 자신의 함수를 찾아가기 위해 메모리를 하나 더 희생 
+
+	p = &c;
+	p->speak();		// 고양이가 운다
+
+
+	cout << sizeof(Dog ) << ", " << sizeof( Cat ) << ", " << sizeof( Animal ) << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Nov 13 12:53:07 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 13  수	   C++월56수34			 (11주 2일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+
+using namespace std;
+
+// 멤버 함수에 virtual을 붙이게 되면
+// 클래스 객체가 생성될 때 포인터 한개(4byte)가 멤버 변수에 추가된다.
+//
+// 이 포인터의 이름은 vptr( virtual pointer ) 인데
+// vptr은 vtb( vitual table )을 가리킨다
+
+class Animal {
+	int a;
+public:
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+};
+
+class Dog : public Animal {
+	int d;
+public:
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int c;
+	int cc;
+public:
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+int main()
+{
+	// 동물 호텔을 운영한다.
+	// 동물을 100마리까지 수용할 수 있다.
+	// 개와 고양이를 손님으로 받을 수 있다.
+
+	// 투숙중인 손님 전체 명단을 출력할 수 있어야 한다.
+
+	// 방에 있는 Animal님은 자신의 정체(개/고양이, 이름)를 밝혀 주세요.
+
+	// 너는 실제 Dog인데 Animal이라고 할 수 있니? --> (Dog -> Animal)항상 성립
+
+	Dog d;
+	Cat c;
+
+	Animal* p;
+
+	p = &d;
+	p->speak();		// 개가 짖는다		// speak (Animal* this)		// 진짜 자신의 함수를 찾아가기 위해 메모리를 더 희생 - 다형성
+
+	p = &c;
+	p->speak();		// 고양이가 운다
+
+	cout << sizeof(Dog ) << ", " << sizeof( Cat ) << ", " << sizeof( Animal ) << endl;
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Nov 13 13:06:27 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 13  수	   C++월56수34			 (11주 2일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+
+using namespace std;
+
+// 멤버 함수에 virtual을 붙이게 되면
+// 클래스 객체가 생성될 때 포인터 한개(4byte)가 멤버 변수에 추가된다.
+//
+// 이 포인터의 이름은 vptr( virtual pointer ) 인데
+// vptr은 vtb( vitual table )을 가리킨다
+
+class Animal {
+	int a;
+public:
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+};
+
+class Dog : public Animal {
+	int d;
+public:
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int c;
+	int cc;
+public:
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+// 동물 호텔을 운영한다.
+// 동물을 100마리까지 수용할 수 있다.
+// 개와 고양이를 손님으로 받을 수 있다.
+
+// 투숙중인 손님 전체 명단을 출력할 수 있어야 한다.
+
+int main()
+{
+	// 100 마리가 들어갈 공간을 어떻게 만들까?
+	// Animal a[100] - 크기가 부족하다
+
+	Animal* animals [100];
+
+	Dog d;
+	animals[0] = &d;	// animals[0] = new Dog;
+	animals[1] = new Cat;
+	animals[2] = new Cat;
+
+	for(int i = 0 ; i < 3 ; ++i )
+		animals[i]->speak();
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Nov 13 13:09:46 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 13  수	   C++월56수34			 (11주 2일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+
+using namespace std;
+
+// 멤버 함수에 virtual을 붙이게 되면
+// 클래스 객체가 생성될 때 포인터 한개(4byte)가 멤버 변수에 추가된다.
+//
+// 이 포인터의 이름은 vptr( virtual pointer ) 인데
+// vptr은 vtb( vitual table )을 가리킨다
+
+class Animal {
+	int a;
+public:
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+};
+
+class Dog : public Animal {
+	int d;
+public:
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int c;
+	int cc;
+public:
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+// 동물 호텔을 운영한다.
+// 동물을 100마리까지 수용할 수 있다.
+// 개와 고양이를 손님으로 받을 수 있다.
+
+// 투숙중인 손님 전체 명단을 출력할 수 있어야 한다.
+
+int main()
+{
+	// 100 마리가 들어갈 공간을 어떻게 만들까?
+	// Animal a[100] - 크기가 부족하다
+
+	Animal* animals [100];
+
+	Dog d;
+	animals[0] = &d;	// animals[0] = new Dog;
+	animals[1] = new Cat;
+	animals[2] = new Cat;
+
+	for(int i = 0 ; i < 3 ; ++i )
+		animals[i]->speak();
+
+	delete animals[1];
+	delete animals[2];
+
+	save( "소스.cpp" );
+}
+
+
+----------------------------------------------------------------------------
+Wed Nov 13 13:14:22 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 13  수	   C++월56수34			 (11주 2일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//		- 메모리를 더 사용하여 다형성을 구현한다
+//			virtual
+//		- 추상클래스 (abstract class), 순수가상함수
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+
+using namespace std;
+
+// 멤버 함수에 virtual을 붙이게 되면
+// 클래스 객체가 생성될 때 포인터 한개(4byte)가 멤버 변수에 추가된다.
+//
+// 이 포인터의 이름은 vptr( virtual pointer ) 인데
+// vptr은 vtb( vitual table )을 가리킨다
+
+class Animal {
+	int a;
+public:
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+};
+
+class Dog : public Animal {
+	int d;
+public:
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int c;
+public:
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+// [문제] 동물을 몇 마리 받을 건지 사용자의 입력을 받자
+// 입력한 수만큼 빈방을 만들고
+// 랜덤값을 사용하여 Dog와 Cat을 채워넣자
+// 모두 speak 하게 하자
+
+int main()
+{
+
+
+	save("소스.cpp");
+}
