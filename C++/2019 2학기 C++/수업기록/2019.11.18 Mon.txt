@@ -1,0 +1,608 @@
+
+
+
+----------------------------------------------------------------------------
+Mon Nov 18 14:18:58 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 18  월	   C++월56수34			 (12주 1일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//		- 메모리를 더 사용하여 다형성을 구현한다
+//			virtual
+//		- 추상클래스 (abstract class), 순수가상함수
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include "save.h"
+
+using namespace std;
+
+// 멤버 함수에 virtual을 붙이게 되면
+// 클래스 객체가 생성될 때 포인터 한개(4byte)가 멤버 변수에 추가된다.
+//
+// 이 포인터의 이름은 vptr( virtual pointer ) 인데
+// vptr은 vtb( vitual table )을 가리킨다
+
+default_random_engine dre;
+uniform_int_distribution<int> uid{ 0, 1 };
+
+class Animal {
+	int a;
+public:
+	Animal ( ) {
+	}
+	~Animal ( ) {
+	}
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+	int random ( ) {
+		return a;
+	}
+};
+
+class Dog : public Animal {
+	int* d;
+public:
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int* c;
+public:
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+// [문제] 동물을 몇 마리 받을 건지 사용자의 입력을 받자
+// 입력한 수만큼 빈방을 만들고
+// 랜덤값을 사용하여 Dog와 Cat을 채워넣자
+// 모두 speak 하게 하자
+
+int main()
+{
+	int n;
+
+	cout << "동물을 몇 마리를 받을까요? ";
+	cin >> n;
+
+	Animal** room = new Animal*[n];
+
+	for ( int i = 0; i < n; ++i ) {
+		if ( uid ( dre ) == 0 )
+			room[i] = new Dog;		// 여기서 자동으로 형변환이 일어남 - 다형성	 -> (Animal*)(Dog*)new Dog; ()가 생략된 문장이다, 자연스러운 것이기 때문에
+		else
+			room[i] = new Cat;
+	}
+
+	for ( int i = 0; i < n; ++i ) {
+		cout << i + 1 << "번째 방 : ";
+		room[i] ->speak ( );
+	}
+
+	delete[] room;
+
+	save("소스.cpp");
+}
+
+
+----------------------------------------------------------------------------
+Mon Nov 18 14:31:12 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 18  월	   C++월56수34			 (12주 1일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//		- 메모리를 더 사용하여 다형성을 구현한다
+//			virtual
+//		- 추상클래스 (abstract class), 순수가상함수
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include "save.h"
+
+using namespace std;
+
+// 멤버 함수에 virtual을 붙이게 되면
+// 클래스 객체가 생성될 때 포인터 한개(4byte)가 멤버 변수에 추가된다.
+//
+// 이 포인터의 이름은 vptr( virtual pointer ) 인데
+// vptr은 vtb( vitual table )을 가리킨다
+
+default_random_engine dre;
+uniform_int_distribution<int> uid{ 0, 1 };
+
+class Animal {
+	int a;
+public:
+	Animal ( ) {
+	}
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+	int random ( ) {
+		return a;
+	}
+};
+
+class Dog : public Animal {
+	int* d;
+public:
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int* c;
+public:
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+// [문제] 동물을 몇 마리 받을 건지 사용자의 입력을 받자
+// 입력한 수만큼 빈방을 만들고
+// 랜덤값을 사용하여 Dog와 Cat을 채워넣자
+// 모두 speak 하게 하자
+
+int main()
+{
+	save ( "소스.cpp" );
+
+	int n;
+
+	while ( true ) {
+		cout << "동물을 몇 마리를 받을까요? ";
+		cin >> n;
+
+		Animal** room = new Animal*[n];
+
+		for ( int i = 0; i < n; ++i ) {
+			if ( uid ( dre ) )
+				room[i] = new Dog;		// 여기서 자동으로 형변환이 일어남 - 다형성	 -> (Animal*)(Dog*)new Dog; ()가 생략된 문장이다, 자연스러운 것이기 때문에
+			else
+				room[i] = new Cat;
+		}
+
+		for ( int i = 0; i < n; ++i ) {
+			cout << i + 1 << "번째 방 : ";
+			room[i]->speak ( );
+		}
+		
+		for ( int i{} ; i < n ; ++i )
+			delete[] room[i];
+		delete[] room;
+	}
+}
+
+
+----------------------------------------------------------------------------
+Mon Nov 18 14:40:42 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 18  월	   C++월56수34			 (12주 1일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//		- 메모리를 더 사용하여 다형성을 구현한다
+//			virtual
+//		- 추상클래스 (abstract class), 순수가상함수
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include "save.h"
+
+using namespace std;
+
+// 멤버 함수에 virtual을 붙이게 되면
+// 클래스 객체가 생성될 때 포인터 한개(4byte)가 멤버 변수에 추가된다.
+//
+// 이 포인터의 이름은 vptr( virtual pointer ) 인데
+// vptr은 vtb( vitual table )을 가리킨다
+
+default_random_engine dre;
+uniform_int_distribution<int> uid{ 0, 1 };
+
+class Animal {
+	int a;
+public:
+	Animal ( ) {
+	}
+	virtual ~Animal() { cout << "Animal 소멸자" << endl; }
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+	int random ( ) {
+		return a;
+	}
+};
+
+class Dog : public Animal {
+	int* d;
+public:
+	virtual ~Dog () final { cout << "Dog 소멸자" << endl; }
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int* c;
+public:
+	virtual ~Cat ( ) final { cout << "Cat 소멸자" << endl; }
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+// [문제] 동물을 몇 마리 받을 건지 사용자의 입력을 받자
+// 입력한 수만큼 빈방을 만들고
+// 랜덤값을 사용하여 Dog와 Cat을 채워넣자
+// 모두 speak 하게 하자
+
+int main()
+{
+	save ( "소스.cpp" );
+
+	int n;
+
+	while ( true ) {
+		cout << "동물을 몇 마리를 받을까요? ";
+		cin >> n;
+
+		Animal** room = new Animal*[n];
+
+		for ( int i = 0; i < n; ++i ) {
+			if ( uid ( dre ) )
+				room[i] = new Dog;		// 여기서 자동으로 형변환이 일어남 - 다형성	 -> (Animal*)(Dog*)new Dog; ()가 생략된 문장이다, 자연스러운 것이기 때문에
+			else
+				room[i] = new Cat;
+		}
+
+		for ( int i = 0; i < n; ++i ) {
+			cout << i + 1 << "번째 방 : ";
+			room[i]->speak ( );
+		}
+		
+		for ( int i{} ; i < n ; ++i )
+			delete room[i];
+		delete[] room;
+	}
+}
+
+
+----------------------------------------------------------------------------
+Mon Nov 18 14:58:20 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 18  월	   C++월56수34			 (12주 1일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//		- 메모리를 더 사용하여 다형성을 구현한다
+//			virtual
+//		- 추상클래스 (abstract class), 순수가상함수
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include "save.h"
+
+using namespace std;
+
+// 멤버 함수에 virtual을 붙이게 되면
+// 클래스 객체가 생성될 때 포인터 한개(4byte)가 멤버 변수에 추가된다.
+//
+// 이 포인터의 이름은 vptr( virtual pointer ) 인데
+// vptr은 vtb( vitual table )을 가리킨다
+
+default_random_engine dre;
+uniform_int_distribution<int> uid{ 0, 1 };
+
+class Animal {
+	int a;
+public:
+	Animal ( ) {
+	}
+	virtual ~Animal() { cout << "Animal 소멸자" << endl; }
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+	int random ( ) {
+		return a;
+	}
+};
+
+class Dog : public Animal {
+	int* d;
+public:
+	~Dog () { cout << "Dog 소멸자" << endl; }
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int* c;
+public:
+	~Cat () { cout << "Cat 소멸자" << endl; }
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+// [문제] 동물을 몇 마리 받을 건지 사용자의 입력을 받자
+// 입력한 수만큼 빈방을 만들고
+// 랜덤값을 사용하여 Dog와 Cat을 채워넣자
+// 모두 speak 하게 하자
+
+int main()
+{
+	save ( "소스.cpp" );
+
+	int n;
+
+	while ( true ) {
+		cout << "동물을 몇 마리를 받을까요? ";
+		cin >> n;
+
+		Animal** room = new Animal*[n];
+
+		for ( int i = 0; i < n; ++i ) {
+			if ( uid ( dre ) )
+				room[i] = new Dog;		// 여기서 자동으로 형변환이 일어남 - 다형성	 -> (Animal*)(Dog*)new Dog; ()가 생략된 문장이다, 자연스러운 것이기 때문에
+			else
+				room[i] = new Cat;
+		}
+
+		for ( int i = 0; i < n; ++i ) {
+			cout << i + 1 << "번째 방 : ";
+			room[i]->speak ( );
+		}
+		
+		for ( int i{} ; i < n ; ++i )
+			delete room[i];
+		delete[] room;
+	}
+}
+
+
+----------------------------------------------------------------------------
+Mon Nov 18 14:59:27 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 18  월	   C++월56수34			 (12주 1일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//		- 메모리를 더 사용하여 다형성을 구현한다
+//			virtual
+//		- 추상클래스 (abstract class), 순수가상함수
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include "save.h"
+
+using namespace std;
+
+// 멤버 함수에 virtual을 붙이게 되면
+// 클래스 객체가 생성될 때 포인터 한개(4byte)가 멤버 변수에 추가된다.
+//
+// 이 포인터의 이름은 vptr( virtual pointer ) 인데
+// vptr은 vtb( vitual table )을 가리킨다
+
+default_random_engine dre;
+uniform_int_distribution<int> uid{ 0, 1 };
+
+class Animal {
+	int a;
+public:
+	Animal ( ) {
+	}
+	virtual ~Animal() { cout << "Animal 소멸자" << endl; }
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+	int random ( ) {
+		return a;
+	}
+};
+
+class Dog : public Animal {
+	int* d;
+public:
+	~Dog () { cout << "Dog 소멸자" << endl; }
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int* c;
+public:
+	~Cat () { cout << "Cat 소멸자" << endl; }
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+// [문제] 동물을 몇 마리 받을 건지 사용자의 입력을 받자
+// 입력한 수만큼 빈방을 만들고
+// 랜덤값을 사용하여 Dog와 Cat을 채워넣자
+// 모두 speak 하게 하자
+
+int main()
+{
+	save ( "소스.cpp" );
+
+	int n;
+
+	while ( true ) {
+		cout << "동물을 몇 마리를 받을까요? ";
+		cin >> n;
+
+		Animal** room = new Animal*[n];
+
+		for ( int i = 0; i < n; ++i ) {
+			if ( uid ( dre ) )
+				room[i] = new Dog;		// 여기서 자동으로 형변환이 일어남 - 다형성	 -> (Animal*)(Dog*)new Dog; ()가 생략된 문장이다, 자연스러운 것이기 때문에
+			else
+				room[i] = new Cat;
+		}
+
+		for ( int i = 0; i < n; ++i ) {
+			cout << i + 1 << "번째 방 : ";
+			room[i]->speak ( );
+		}
+		
+		for ( int i{} ; i < n ; ++i )
+			delete room[i];
+		delete[] room;
+	}
+}
+
+
+----------------------------------------------------------------------------
+Mon Nov 18 15:10:36 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 18  월	   C++월56수34			 (12주 1일)
+//
+// 클래스 간의 관계 - 상속
+//	1. 기존 코드를 재사요한다
+//	2. 다형성을 구현한다
+//		- 메모리를 더 사용하여 다형성을 구현한다
+//			virtual
+//		- 추상클래스 (abstract class), 순수가상함수
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <random>
+#include "save.h"
+
+using namespace std;
+
+// 멤버 함수에 virtual을 붙이게 되면
+// 클래스 객체가 생성될 때 포인터 한개(4byte)가 멤버 변수에 추가된다.
+//
+// 이 포인터의 이름은 vptr( virtual pointer ) 인데
+// vptr은 vtb( vitual table )을 가리킨다
+
+default_random_engine dre;
+uniform_int_distribution<int> uid{ 0, 1 };
+
+class Animal {
+	int a;
+public:
+	Animal ( ) {
+	}
+	virtual ~Animal() { cout << "Animal 소멸자" << endl; }
+	virtual void speak ( ) const {		// 이 함수는 진짜가 아니야
+	cout << "동물들은 speak 할 수 있어" << endl;
+	}
+	int random ( ) {
+		return a;
+	}
+};
+
+class Dog : public Animal {
+	int* d;
+public:
+	~Dog () { cout << "Dog 소멸자" << endl; }
+	virtual void speak ( )const override {		// virtual 안써도 가능	// const -> 한정자의 한 종류 : 자격을 한정해줌 (qualifier?)
+		cout << "멍멍" << endl;
+	}
+};
+
+class Cat : public Animal {
+	int* c;
+public:
+	~Cat () { cout << "Cat 소멸자" << endl; }
+	virtual void speak ( )const override {
+		cout << "애옹" << endl;
+	}
+};
+
+// [문제] 동물을 몇 마리 받을 건지 사용자의 입력을 받자
+// 입력한 수만큼 빈방을 만들고
+// 랜덤값을 사용하여 Dog와 Cat을 채워넣자
+// 모두 speak 하게 하자
+
+int main()
+{
+	save ( "소스.cpp" );
+
+	int n;
+
+	while ( true ) {
+		cout << "동물을 몇 마리를 받을까요? ";
+		cin >> n;
+
+		Animal** room = new Animal*[n];
+
+		for ( int i = 0; i < n; ++i ) {
+			if ( uid ( dre ) )
+				room[i] = new Dog;		// 여기서 자동으로 형변환이 일어남 - 다형성	 -> (Animal*)(Dog*)new Dog; ()가 생략된 문장이다, 자연스러운 것이기 때문에
+			else
+				room[i] = new Cat;
+		}
+
+		for ( int i = 0; i < n; ++i ) {
+			cout << i + 1 << "번째 방 : ";
+			room[i]->speak ( );
+		}
+		
+		// 개만 짖게 하고 싶다. 어떻게???
+		for ( int i = 0; i < n; ++i ) {
+			// room[i]야 너는 원래 Dog니?
+			if ( dynamic_cast<Dog*>(room[i]) != nullptr ) {		// != nullptr 생략가능
+				cout << i + 1 << "번째 방 : ";
+				room[i]->speak ( );
+			}
+		}
+
+
+		for ( int i{} ; i < n ; ++i )
+			delete room[i];
+		delete[] room;
+
+		cout << "호텔을 게속 운영할까요? ( yes : 0 , no : 1 ) ";
+		cin >> n;
+		if( n )
+			break;
+	}
+}
