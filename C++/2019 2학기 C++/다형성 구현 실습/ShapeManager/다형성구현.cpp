@@ -8,15 +8,17 @@
 #include "triangle.h"
 #include "circle.h"
 #include "rectangle.h"
+#include "line.h"
 #include "ShapeManager.h"
 using namespace std;
 
-int main ( ) 
+int main()
 {
 	ShapeManager sm( 100 );
-	unsigned short choseMenu {1};
+	unsigned short choseMenu {};
+	unsigned short num;
 
-	while( choseMenu != 4)
+	while( choseMenu != 4 )
 	{
 		cout << endl;
 		cout << "----------------------------------------------" << endl;
@@ -33,13 +35,14 @@ int main ( )
 
 		switch( choseMenu )
 		{
-		case 1:
+		case 1: // 도형 추가
 		{
 			cout << "----------------------------------------------" << endl;
 			cout << "원하는 도형을 선택해주세요" << endl;
 			cout << "1. 삼각형" << endl;
 			cout << "2. 사각형" << endl;
 			cout << "3. 원" << endl;
+			cout << "4. 선" << endl;
 			cout << "----------------------------------------------" << endl << endl;
 
 			unsigned short shapeNum;
@@ -51,20 +54,23 @@ int main ( )
 			switch( shapeNum )	// 도형추가
 			{
 			case 1:	// 삼각형
+			{
 				double p1xT, p1yT, p2xT, p2yT, p3xT, p3yT;
 				cout << "p1(x, y), p2(x, y), p3(x, y) 각각의 x, y를 입력해 주세요" << endl;
 				cin >> p1xT >> p1yT >> p2xT >> p2yT >> p3xT >> p3yT;
 				sm.insert( new Triangle( Point( p1xT, p1yT ), Point( p2xT, p2yT ), Point( p3xT, p3yT ) ) );
 				break;
-
+			}
 			case 2: // 사각형
+			{
 				double p1xR, p1yR, p2xR, p2yR;
 				cout << "p1(x, y), p2(x, y) 각각의 x, y를 입력해 주세요" << endl;
 				cin >> p1xR >> p1yR >> p2xR >> p2yR;
 				sm.insert( new Rectangle( Point( p1xR, p1yR ), Point( p2xR, p2yR ) ) );
 				break;
-
+			}
 			case 3: // 원
+			{
 				double px, py, r;
 				cout << "원의 중심 p(x, y)와 r을 입력해주세요" << endl;
 				cout << "원의 중심 : ";
@@ -72,13 +78,27 @@ int main ( )
 				cout << "반지름 : ";
 				cin >> r;
 				sm.insert( new Circle( Point( px, py ), r ) );
-
+				break;
+			}
+			case 4: // 선
+			{
+				double p1x, p1y, p2x, p2y;
+				cout << "시작점 p1(x, y)과 끝점 p2(x, y)을 입력해주세요" << endl;
+				cout << "시작점 : ";
+				cin >> p1x >> p1y;
+				cout << "끝점 : ";
+				cin >> p2x >> p2y;
+				sm.insert( new Line( Point( p1x, p1y ), Point( p2x, p2y ) ) );
+				break;
+			}
 			default:
+			{
 				for( int i = 0; i < 100; ++i )
 					sm.insert( new Rectangle( Point( i, i + 1 ), Point( i * 2, i * 3 ) ) );
 				break;
 			}
-
+				break;
+			}
 			break;
 		}
 
@@ -100,24 +120,104 @@ int main ( )
 			{
 			case 1:
 			{
-				cout << "몇 번째 도형을 제거할까요? : ";
-				
+				cout << "제거할 도형의 번호를 입력해주세요 : ";
+				cin >> num;
+
+				sm.removeNum( num );
+				break;
 			}
+
 			case 2:
 			{
+				cout << "----------------------------------------------" << endl;
+				cout << "원하는 도형을 선택해주세요" << endl;
+				cout << "1. 삼각형" << endl;
+				cout << "2. 사각형" << endl;
+				cout << "3. 원" << endl;
+				cout << "4. 선" << endl;
+				cout << "----------------------------------------------" << endl << endl;
 
+				cout << "번호를 입력하세요 : ";
+				cin >> num;
+				cout << endl << endl;
+
+				unsigned short tmp;
+				tmp = 0;
+
+				if( num == 1 )
+				{
+					for( int i = 0; i < sm.return_nShape(); ++i )
+					{
+						if( dynamic_cast< Triangle* >( sm.return_shapes( i ) ) )
+						{
+							sm.removeNum( i );
+							++tmp;
+						}
+					}
+					cout << "----------------------------------------------" << endl;
+					cout << "삼각형이 " << tmp << "개만큼 삭제되었습니다." << endl;
+					cout << "----------------------------------------------" << endl << endl;
+				}
+				if( num == 2 )
+				{
+					for( int i = 0; i < sm.return_nShape(); ++i )
+					{
+						if( dynamic_cast< Rectangle* >( sm.return_shapes( i ) ) )
+						{
+							sm.removeNum( i );
+							++tmp;
+						}
+					}
+					cout << "----------------------------------------------" << endl;
+					cout << "사각형이 " << tmp << "개만큼 삭제되었습니다." << endl;
+					cout << "----------------------------------------------" << endl << endl;
+				}
+				if( num == 3 )
+				{
+					for( int i = 0; i < sm.return_nShape(); ++i )
+					{
+						if( dynamic_cast< Circle* >( sm.return_shapes( i ) ) )
+						{
+							sm.removeNum( i );
+							++tmp;
+						}
+					}
+					cout << "----------------------------------------------" << endl;
+					cout << "원이 " << tmp << "개만큼 삭제되었습니다." << endl;
+					cout << "----------------------------------------------" << endl << endl;
+				}
+				if( num == 4 )
+				{
+					for( int i = 0; i < sm.return_nShape(); ++i )
+					{
+						if( dynamic_cast< Line* >( sm.return_shapes( i ) ) )
+						{
+							sm.removeNum( i );
+							++tmp;
+						}
+					}
+					cout << "----------------------------------------------" << endl;
+					cout << "선이 " << tmp << "개만큼 삭제되었습니다." << endl;
+					cout << "----------------------------------------------" << endl << endl;
+				}
+				break;
 			}
-			default: 
+
+			default:
+			{
 				cout << "번호 중에 선택해주세요" << endl;
 				break;
 			}
+			}
+			break;
 		}
 
 		case 3: sm.draw(); break;
-
+		case 4: cout << "프로그램을 종료합니다." << endl; break;
 		default: cout << "번호 중에 선택해주세요" << endl; break;
 		}
 	}
+}
 
 	// 1. 관리 클래스를 만듦
 	//ShapeManager sm ( 100 );		// 최대 100개의 도형을 관리함
@@ -134,4 +234,3 @@ int main ( )
 //	sm.draw ( );
 
 	// 이 프로그램에서 잘못된 점을 찾을 수 있는가?
-}
