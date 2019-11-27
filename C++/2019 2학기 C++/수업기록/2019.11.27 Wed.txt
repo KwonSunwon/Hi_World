@@ -1,0 +1,396 @@
+
+
+
+----------------------------------------------------------------------------
+Wed Nov 27 11:57:53 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 27  수		   C++월56수34				 (13주 2일)
+//
+// 템플릿(책 7장)
+//
+// 12/9	 월 종강(15주 1일) - 강의정리, 책소개
+// 12/11 수 시험3(15주 2일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+using namespace std;
+
+void change( int& , int& );
+
+class Dog {
+	string name;
+	int age;
+public:
+	Dog ( ) {};	// 이건 없어도 되고
+	Dog ( string s, int n ) : name{ s }, age{ n }{};
+	Dog ( const Dog& other ) : name{ other.name }, age{ other.age }{};  // 이것도 없어도 되네
+
+
+	friend ostream& operator<<( ostream& , const Dog&  );
+};
+
+void change ( Dog&, Dog& );
+
+ostream& operator<<( ostream& os, const Dog& d )
+{
+	os << d.name << " - " << d.age;
+	return os;
+}
+
+int main ( ) 
+{
+	{ // POD 타입의 함수
+		int a = 1, b = 2;
+		change ( a, b );
+		cout << a << ", " << b << endl;	// 2, 1
+	}
+
+	Dog a{ "코코", 10 }, b{ "보리", 3 };
+
+	change ( a, b );
+
+	cout << a << endl;	// 보리 - 3
+	cout << b << endl;	// 코코 - 10
+
+	save( "소스.cpp" );
+}
+
+void change ( int& a, int& b )
+{
+	int temp = a;
+	a = b;
+	b = temp;
+}
+
+void change ( Dog& a, Dog& b )
+{
+	Dog temp = a;
+	a = b;
+	b = temp;
+}
+
+
+----------------------------------------------------------------------------
+Wed Nov 27 12:48:32 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 27  수		   C++월56수34				 (13주 2일)
+//
+// 템플릿(template)(책 7장) - 메타프로그래밍(meta-programing)
+//
+// 12/9	 월 종강(15주 1일) - 강의정리, 책소개
+// 12/11 수 시험3(15주 2일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+using namespace std;
+
+class Dog;	// 전방선언
+
+// function template
+template <typename T>
+void change ( T& , T& );
+
+// definition of function template
+template <typename T>			// template <class T> == template <typename T>
+void change ( T& a, T& b )
+{
+	T temp{ a };
+	a = b;
+	b = temp;
+}
+
+class Dog {
+	string name;
+	int age;
+public:
+	Dog ( string s, int n ) : name{ s }, age{ n }{};
+
+	friend ostream& operator<<( ostream& , const Dog& );
+};
+
+ostream& operator<<( ostream& os, const Dog& d )
+{
+	os << d.name << " - " << d.age;
+	return os;
+}
+
+int main ( ) 
+{
+	{ // POD 타입의 함수
+		int a = 1, b = 2;
+		change ( a, b );
+		cout << a << ", " << b << endl;		// 2, 1
+	}
+
+	Dog a{ "코코", 10 }, b{ "보리", 3 };
+
+	change ( a, b );
+
+	cout << a << endl;	// 보리 - 3
+	cout << b << endl;	// 코코 - 10
+
+	save( "소스.cpp" );
+}
+
+
+
+
+----------------------------------------------------------------------------
+Wed Nov 27 12:59:31 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 27  수		   C++월56수34				 (13주 2일)
+//
+// 템플릿(template)(책 7장) - 메타프로그래밍(meta-programing)
+//
+// 12/9	 월 종강(15주 1일) - 강의정리, 책소개
+// 12/11 수 시험3(15주 2일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+using namespace std;
+
+// function template
+template <typename T>
+void change ( T& , T& );
+
+// definition of function template
+template <typename T>			// template <class T> == template <typename T>
+void change ( T& a, T& b )
+{
+	T temp{ a };
+	a = b;
+	b = temp;
+}
+// 템플릿의 우선순위는 매우 많이 뒤로 밀려있다
+
+
+int main ( ) 
+{
+	char a = 'a', b = 'b';
+	change ( a, b );
+	cout << a << ", " << b << endl;
+
+	const char* c = "hello";
+	const char* d = "world";
+	change ( c, d );
+	cout << c << ", " << d << endl;
+
+
+	save( "소스.cpp" );
+}
+
+
+
+
+----------------------------------------------------------------------------
+Wed Nov 27 13:03:46 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 27  수		   C++월56수34				 (13주 2일)
+//
+// 템플릿(template)(책 7장) - 메타프로그래밍(meta-programing)
+//
+// 12/9	 월 종강(15주 1일) - 강의정리, 책소개
+// 12/11 수 시험3(15주 2일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include "save.h"
+using namespace std;
+
+// function template
+template <typename T>
+void change ( T& , T& );
+
+// definition of function template
+template <typename T>
+void change ( T& a, T& b )
+{
+	T temp{ a };
+	a = b;
+	b = temp;
+}
+
+int main ( ) 
+{
+	char a = 'a', b = 'b';
+	change <char> ( a, b );
+	cout << a << ", " << b << endl;
+
+	const char* c = "hello";
+	const char* d = "world";
+	change <const char*> ( c, d );
+	cout << c << ", " << d << endl;
+
+	save( "소스.cpp" );
+}
+
+
+
+
+----------------------------------------------------------------------------
+Wed Nov 27 13:10:13 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 27  수		   C++월56수34				 (13주 2일)
+//
+// 템플릿(template)(책 7장) - 메타프로그래밍(meta-programing)
+//
+// 12/9	 월 종강(15주 1일) - 강의정리, 책소개
+// 12/11 수 시험3(15주 2일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include "save.h"
+using namespace std;
+
+template <typename T>
+T amax ( T, T );
+
+template <typename T>
+T amax ( T a, T b)
+{
+	return a < b ? b : a;
+}
+
+int main ( ) 
+{
+	cout << amax ( 3, 4 ) << endl;
+	cout << amax ( "abc", "def" ) << endl;
+	cout << amax ( 3.141592, 2.71828 ) << endl;
+
+	save( "소스.cpp" );
+}
+
+
+
+
+----------------------------------------------------------------------------
+Wed Nov 27 13:13:51 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 27  수		   C++월56수34				 (13주 2일)
+//
+// 템플릿(template)(책 7장) - 메타프로그래밍(meta-programing)
+//
+// 12/9	 월 종강(15주 1일) - 강의정리, 책소개
+// 12/11 수 시험3(15주 2일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include "save.h"
+using namespace std;
+
+template <typename T>
+T amax ( T, T );
+
+int main ( ) 
+{
+	cout << amax ( 3, 4 ) << endl;
+	cout << amax ( "abc", "def" ) << endl;
+	cout << amax ( 3.141592, 2.71828 ) << endl;
+
+	save( "소스.cpp" );
+}
+
+template <typename T>
+T amax ( T a, T b )
+{
+	return a < b ? b : a;
+}
+
+
+----------------------------------------------------------------------------
+Wed Nov 27 13:16:05 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 27  수		   C++월56수34				 (13주 2일)
+//
+// 템플릿(template)(책 7장) - 메타프로그래밍(meta-programing)
+//
+// 12/9	 월 종강(15주 1일) - 강의정리, 책소개
+// 12/11 수 시험3(15주 2일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include "save.h"
+using namespace std;
+
+template <typename T>
+T amax ( T, T );
+
+int main ( ) 
+{
+	cout << amax <int> ( 3, 4 ) << endl;
+	cout << amax <const char*> ( "abc", "def" ) << endl;		// 주소가 전달됨
+	cout << amax <double> ( 3.141592, 2.71828 ) << endl;
+
+	save( "소스.cpp" );
+}
+
+template <typename T>
+T amax ( T a, T b )
+{
+	return a < b ? b : a;
+}
+
+
+----------------------------------------------------------------------------
+Wed Nov 27 13:17:13 2019
+----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// 2019. 11. 27  수		   C++월56수34				 (13주 2일)
+//
+// 템플릿(template)(책 7장) - 메타프로그래밍(meta-programing)
+//
+// 12/9	 월 종강(15주 1일) - 강의정리, 책소개
+// 12/11 수 시험3(15주 2일)
+//-----------------------------------------------------------------------------
+
+#include <iostream>
+#include "save.h"
+using namespace std;
+
+template <typename T>
+T amax ( T, T );
+
+int main ( ) 
+{
+	cout << amax <int> ( 3, 4 ) << endl;
+	cout << amax < > ( "abc", "defa" ) << endl;		// 글자 수가 많은 것이 크다면 어떻게 해야할까?
+	cout << amax <double> ( 3.141592, 2.71828 ) << endl;
+
+	save( "소스.cpp" );
+}
+
+template <typename T>
+T amax ( T a, T b )
+{
+	return a < b ? b : a;
+}
